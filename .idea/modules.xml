@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ta-application/ta-application.iml" filepath="$PROJECT_DIR$/ta-application/ta-application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ta-parent/ta-parent.iml" filepath="$PROJECT_DIR$/ta-parent/ta-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/twitter-analytics.iml" filepath="$PROJECT_DIR$/twitter-analytics.iml" />
     </modules>
   </component>
