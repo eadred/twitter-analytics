@@ -1,11 +1,13 @@
 package com.zuhlke.ta.prototype.solutions.mapdb;
 
+import com.zuhlke.ta.SlowTests;
 import com.zuhlke.ta.prototype.Importer;
 import com.zuhlke.ta.prototype.Query;
 import com.zuhlke.ta.prototype.SentimentTimeline;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -23,6 +25,7 @@ public class MapDBTweetServiceTest {
     }
 
     @Test
+    @Category(SlowTests.class)
     public void importingAndAnalyzeTweets() throws Exception {
         Importer importer = new Importer(tweetService);
         importer.importTweetsFrom(new File("test_set_tweets.txt"));
