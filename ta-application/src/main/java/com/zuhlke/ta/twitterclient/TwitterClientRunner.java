@@ -1,6 +1,6 @@
 package com.zuhlke.ta.twitterclient;
 
-import com.zuhlke.ta.prototype.TweetService;
+import com.zuhlke.ta.common.TweetService;
 import twitter4j.StatusListener;
 
 import java.io.IOException;

@@ -2,8 +2,8 @@ package integrationtest.zuhlke.ta.prototype;
 
 import com.zuhlke.ta.SlowTests;
 import com.zuhlke.ta.prototype.Importer;
-import com.zuhlke.ta.prototype.Query;
-import com.zuhlke.ta.prototype.SentimentTimeline;
+import com.zuhlke.ta.common.Query;
+import com.zuhlke.ta.common.SentimentTimeline;
 import com.zuhlke.ta.prototype.solutions.common.PersistentTweetService;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;

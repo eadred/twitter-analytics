@@ -1,4 +1,4 @@
-package com.zuhlke.ta.prototype;
+package com.zuhlke.ta.common;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

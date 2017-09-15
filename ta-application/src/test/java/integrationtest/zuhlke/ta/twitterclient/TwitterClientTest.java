@@ -1,9 +1,9 @@
 package integrationtest.zuhlke.ta.twitterclient;
 
-import com.zuhlke.ta.prototype.Query;
-import com.zuhlke.ta.prototype.SentimentTimeline;
-import com.zuhlke.ta.prototype.Tweet;
-import com.zuhlke.ta.prototype.TweetService;
+import com.zuhlke.ta.common.Query;
+import com.zuhlke.ta.common.SentimentTimeline;
+import com.zuhlke.ta.common.Tweet;
+import com.zuhlke.ta.common.TweetService;
 import com.zuhlke.ta.twitterclient.*;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -1,6 +1,6 @@
 package com.zuhlke.ta.prototype.solutions.mapdb;
 
-import com.zuhlke.ta.prototype.Tweet;
+import com.zuhlke.ta.common.Tweet;
 import com.zuhlke.ta.prototype.solutions.common.TweetStore;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;

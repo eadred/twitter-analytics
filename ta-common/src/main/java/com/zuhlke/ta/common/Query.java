@@ -1,4 +1,4 @@
-package com.zuhlke.ta.prototype;
+package com.zuhlke.ta.common;
 
 public class Query {
     public final String keyword;

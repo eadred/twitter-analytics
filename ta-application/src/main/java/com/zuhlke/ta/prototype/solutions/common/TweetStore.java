@@ -1,6 +1,6 @@
 package com.zuhlke.ta.prototype.solutions.common;
 
-import com.zuhlke.ta.prototype.Tweet;
+import com.zuhlke.ta.common.Tweet;
 
 import java.util.stream.Stream;
 

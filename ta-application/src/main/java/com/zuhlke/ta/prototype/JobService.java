@@ -1,5 +1,9 @@
 package com.zuhlke.ta.prototype;
 
+import com.zuhlke.ta.common.Query;
+import com.zuhlke.ta.common.SentimentTimeline;
+import com.zuhlke.ta.common.TweetService;
+
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

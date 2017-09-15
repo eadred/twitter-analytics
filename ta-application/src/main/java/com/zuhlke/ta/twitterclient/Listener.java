@@ -1,6 +1,6 @@
 package com.zuhlke.ta.twitterclient;
 
-import com.zuhlke.ta.prototype.Tweet;
+import com.zuhlke.ta.common.Tweet;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;

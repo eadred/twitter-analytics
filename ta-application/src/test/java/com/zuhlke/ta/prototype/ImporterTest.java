@@ -1,11 +1,15 @@
 package com.zuhlke.ta.prototype;
 
+import com.zuhlke.ta.common.Query;
+import com.zuhlke.ta.common.SentimentTimeline;
+import com.zuhlke.ta.common.Tweet;
+import com.zuhlke.ta.common.TweetService;
+import com.zuhlke.ta.prototype.Importer;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Stream;
 
 public class ImporterTest {
     @Test

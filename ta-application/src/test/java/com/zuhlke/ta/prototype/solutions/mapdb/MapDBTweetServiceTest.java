@@ -2,16 +2,15 @@ package com.zuhlke.ta.prototype.solutions.mapdb;
 
 import com.zuhlke.ta.SlowTests;
 import com.zuhlke.ta.prototype.Importer;
-import com.zuhlke.ta.prototype.Query;
-import com.zuhlke.ta.prototype.SentimentTimeline;
+import com.zuhlke.ta.common.Query;
+import com.zuhlke.ta.common.SentimentTimeline;
+import com.zuhlke.ta.prototype.solutions.mapdb.MapDBTweetService;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static com.zuhlke.ta.prototype.solutions.mapdb.MapDBTweetStore.TWEETS_DB;
 

@@ -1,4 +1,4 @@
-package com.zuhlke.ta.prototype;
+package com.zuhlke.ta.common;
 
 import java.io.Serializable;
 import java.time.LocalDate;

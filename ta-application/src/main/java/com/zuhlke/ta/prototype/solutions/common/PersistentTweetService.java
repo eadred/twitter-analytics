@@ -1,7 +1,8 @@
 package com.zuhlke.ta.prototype.solutions.common;
 
-import com.zuhlke.ta.prototype.*;
-import com.zuhlke.ta.prototype.SentimentTimeline.Day;
+import com.zuhlke.ta.common.*;
+import com.zuhlke.ta.common.SentimentTimeline.Day;
+import com.zuhlke.ta.prototype.SentimentAnalyzer;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collector;
 import java.util.stream.Collector.Characteristics;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 

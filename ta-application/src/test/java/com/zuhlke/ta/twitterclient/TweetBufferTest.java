@@ -1,7 +1,7 @@
 package com.zuhlke.ta.twitterclient;
 
-import com.zuhlke.ta.prototype.Tweet;
-import com.zuhlke.ta.prototype.TweetService;
+import com.zuhlke.ta.common.Tweet;
+import com.zuhlke.ta.common.TweetService;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

@@ -1,6 +1,8 @@
 package com.zuhlke.ta.prototype;
 
 import com.google.common.base.Strings;
+import com.zuhlke.ta.common.Tweet;
+import com.zuhlke.ta.common.TweetService;
 
 import java.io.BufferedReader;
 import java.io.File;

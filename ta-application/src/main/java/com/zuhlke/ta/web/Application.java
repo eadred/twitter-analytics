@@ -1,12 +1,11 @@
 package com.zuhlke.ta.web;
 
 import com.google.common.base.Strings;
-import com.zuhlke.ta.prototype.*;
-import com.zuhlke.ta.prototype.solutions.common.TweetStore;
+import com.zuhlke.ta.common.*;
+import com.zuhlke.ta.prototype.Importer;
+import com.zuhlke.ta.prototype.JobService;
+import com.zuhlke.ta.prototype.SentimentAnalyzer;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
-import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetStore;
-import com.zuhlke.ta.prototype.solutions.common.PersistentTweetService;
-import com.zuhlke.ta.prototype.solutions.mapdb.MapDBTweetService;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import com.zuhlke.ta.twitterclient.TwitterClientRunner;
 import org.jetbrains.annotations.NotNull;
