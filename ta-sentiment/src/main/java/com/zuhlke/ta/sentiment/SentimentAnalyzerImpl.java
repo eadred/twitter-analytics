@@ -1,6 +1,5 @@
 package com.zuhlke.ta.sentiment;
 
-import com.zuhlke.ta.prototype.SentimentAnalyzer;
 import com.zuhlke.ta.sentiment.model.WeightedWord;
 import com.zuhlke.ta.sentiment.pipeline.*;
 import com.zuhlke.ta.sentiment.pipeline.impl.*;
@@ -10,14 +9,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
 
 
 /**
  * Calculates the sentiment polarity and intensity
  * of a document. It is an implementation of the
- * work in 
+ * work in. The POS tagger is tailored to written 
+ * English 
  * 
  * Maite Taboada et al. Lexicon-Based Methos for Sentiment
  * Analysis. Compuational Linguistics 37, 267-307, 2011.
@@ -25,20 +23,20 @@ import static java.util.stream.Collectors.joining;
  * @author hadoop
  *
  */
-public class TwitterSentimentAnalyzerImpl implements SentimentAnalyzer {
+public class SentimentAnalyzerImpl implements SentimentAnalyzer {
 
 	private SentenceDetector sentenceDetector;
 	private ScoreCalculator calculator;
 	private WordTokenizer tokenizer;
-	private POSTokenizer        posTokenizer;
+	private POSTokenizer posTokenizer;
 	private SentimentWordFinder wordFinder;
-	private NGramFilter         ngramFilter;
+	private NGramFilter ngramFilter;
 	
 	private IrrealisFinder irrealisFinder;
 	private NegativesFinder negativesFinder;
 	private IntensifiersFinder intensifiersFinder;
 
-	public TwitterSentimentAnalyzerImpl() {
+	public SentimentAnalyzerImpl() {
 		int maxNgram = 4; // max trimgrams
 
 		try {
@@ -59,7 +57,11 @@ public class TwitterSentimentAnalyzerImpl implements SentimentAnalyzer {
 	}
 
 	String[] getTokens(String sentence){
-		return posTokenizer.tokenize(stream(tokenizer.tokenize(sentence)).collect(joining(" ")));
+		String[] words = tokenizer.tokenize(sentence);
+		StringBuilder builder =  new StringBuilder();
+		for(String word : words)
+			builder.append(word + " ");
+		return posTokenizer.tokenize(builder.toString());
 	}
 
 	List<WeightedWord> getSentimentWords(String[] tokens){
@@ -78,8 +80,10 @@ public class TwitterSentimentAnalyzerImpl implements SentimentAnalyzer {
 			input = getNgramFilteredWords(input);
 			input = irrealisFinder.find(input);
 			input = intensifiersFinder.find(input);
-			//System.out.println(input);
 			input = negativesFinder.find(input);
+			
+			//System.out.println(input);
+			
 			result += calculator.calculate(input);
 		}
 		return result;
@@ -141,3 +145,4 @@ public class TwitterSentimentAnalyzerImpl implements SentimentAnalyzer {
 		this.intensifiersFinder = intensifiersFinder;
 	}
 }
+

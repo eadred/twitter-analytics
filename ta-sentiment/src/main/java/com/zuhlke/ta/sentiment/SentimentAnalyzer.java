@@ -1,4 +1,4 @@
-package com.zuhlke.ta.prototype;
+package com.zuhlke.ta.sentiment;
 
 /**
  * Calculates the sentiment polarity and intensity

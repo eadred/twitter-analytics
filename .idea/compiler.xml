@@ -8,12 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ta-application" />
         <module name="ta-common" />
+        <module name="ta-sentiment" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ta-application" target="1.8" />
       <module name="ta-common" target="1.8" />
       <module name="ta-parent" target="1.8" />
+      <module name="ta-sentiment" target="1.8" />
       <module name="twitter-analytics" target="1.8" />
     </bytecodeTargetLevel>
   </component>

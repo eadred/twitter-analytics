@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import com.zuhlke.ta.common.*;
 import com.zuhlke.ta.prototype.Importer;
 import com.zuhlke.ta.prototype.JobService;
-import com.zuhlke.ta.prototype.SentimentAnalyzer;
+import com.zuhlke.ta.sentiment.SentimentAnalyzer;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import com.zuhlke.ta.twitterclient.TwitterClientRunner;

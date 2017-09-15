@@ -2,7 +2,7 @@ package com.zuhlke.ta.prototype.solutions.common;
 
 import com.zuhlke.ta.common.*;
 import com.zuhlke.ta.common.SentimentTimeline.Day;
-import com.zuhlke.ta.prototype.SentimentAnalyzer;
+import com.zuhlke.ta.sentiment.SentimentAnalyzer;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;

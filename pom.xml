@@ -10,14 +10,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>twitter-analytics</artifactId>
 	<packaging>pom</packaging>
-	
-	<profiles>
-		<profile>
-			<id>full</id>
-			<modules>
-				<module>ta-parent</module>
-				<module>ta-application</module>
-			</modules>
-		</profile>
-	</profiles>
+
+	<modules>
+		<module>ta-parent</module>
+		<module>ta-common</module>
+		<module>ta-sentiment</module>
+		<module>ta-application</module>
+	</modules>
 </project>

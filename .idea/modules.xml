@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ta-application/ta-application.iml" filepath="$PROJECT_DIR$/ta-application/ta-application.iml" />
       <module fileurl="file://$PROJECT_DIR$/ta-common/ta-common.iml" filepath="$PROJECT_DIR$/ta-common/ta-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/ta-parent/ta-parent.iml" filepath="$PROJECT_DIR$/ta-parent/ta-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ta-sentiment/ta-sentiment.iml" filepath="$PROJECT_DIR$/ta-sentiment/ta-sentiment.iml" />
       <module fileurl="file://$PROJECT_DIR$/twitter-analytics.iml" filepath="$PROJECT_DIR$/twitter-analytics.iml" />
     </modules>
   </component>

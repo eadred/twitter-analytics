@@ -1,9 +1,8 @@
 package com.zuhlke.ta.prototype.solutions.inmemory;
 
 import com.zuhlke.ta.common.*;
-import com.zuhlke.ta.prototype.SentimentAnalyzer;
+import com.zuhlke.ta.sentiment.SentimentAnalyzer;
 import com.zuhlke.ta.prototype.solutions.common.PersistentTweetService;
-import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
 import org.junit.Test;
 
 import java.time.LocalDate;
