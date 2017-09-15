@@ -1,6 +1,6 @@
 package com.zuhlke.ta.prototype.solutions.inmemory;
 
-import com.zuhlke.ta.prototype.Tweet;
+import com.zuhlke.ta.common.Tweet;
 import org.junit.Test;
 
 import java.time.LocalDate;
