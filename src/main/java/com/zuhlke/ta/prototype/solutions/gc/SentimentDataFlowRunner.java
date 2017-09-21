@@ -47,7 +47,7 @@ public class SentimentDataFlowRunner {
         tableRef.setDatasetId("camp_exercise");
         tableRef.setTableId("results");
 
-        String queryString = "SELECT message, date FROM camp_exercise.tweets_partial WHERE UPPER(message) CONTAINS UPPER('" + query.keyword + "') LIMIT 1000";
+        String queryString = "SELECT message, date FROM camp_exercise.tweets_partial WHERE UPPER(message) CONTAINS UPPER('" + query.keyword + "')";
         p.apply(BigQueryIO.read().fromQuery(queryString))
                 .apply(ParDo.of(new ToDatedMessage()))
                 .apply(ParDo.of(new ToDatedSentiment()))
@@ -155,7 +155,7 @@ public class SentimentDataFlowRunner {
 
         static TableSchema getSchema() {
             List<TableFieldSchema> fields = new ArrayList<>();
-            fields.add(new TableFieldSchema().setName("date").setType("DATE"));
+            fields.add(new TableFieldSchema().setName("date").setType("STRING"));
             fields.add(new TableFieldSchema().setName("positive").setType("INTEGER"));
             fields.add(new TableFieldSchema().setName("negative").setType("INTEGER"));
             TableSchema schema = new TableSchema().setFields(fields);

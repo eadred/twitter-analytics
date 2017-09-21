@@ -3,6 +3,7 @@ package com.zuhlke.ta.web;
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
 import com.zuhlke.ta.prototype.solutions.common.TweetStore;
+import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsService;
 import com.zuhlke.ta.prototype.solutions.gc.SentimentDataFlowRunner;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetStore;
@@ -25,23 +26,16 @@ import static spark.Spark.post;
 
 public class Application {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        new SentimentDataFlowRunner().run(new Query("song"));
+        TweetService tweetService = new GoogleCloudTweetsService();
+        JobService jobService = new JobService(tweetService);
 
-//        SentimentAnalyzer sentimentAnalyzer = new TwitterSentimentAnalyzerImpl();
-//        TweetService tweetService = new InMemoryTweetService(sentimentAnalyzer);
-////        TweetService tweetService = new MapDBTweetService(sentimentAnalyzer);
-//        JobService jobService = new JobService(tweetService);
-//        Importer importer = new Importer(tweetService);
-//        importer.importTweetsFrom(new File("test_set_tweets.txt"));
-//
-//        FreeMarkerEngine freeMarker = new FreeMarkerEngine();
-//
-////        staticFiles.location("/spark/template/freemarker");
-//        get("/", (req, resp) -> homepageData(jobService), freeMarker);
-//        get("/results/", (req, resp) -> jobService.getResults());
-//        get("/pending/", (req, resp) -> jobService.getPending());
-//        post("/jobs/", (req, resp) -> enqueueJob(jobService, req, resp));
-//
+        FreeMarkerEngine freeMarker = new FreeMarkerEngine();
+
+        get("/", (req, resp) -> homepageData(jobService), freeMarker);
+        get("/results/", (req, resp) -> jobService.getResults());
+        get("/pending/", (req, resp) -> jobService.getPending());
+        post("/jobs/", (req, resp) -> enqueueJob(jobService, req, resp));
+
 //        TwitterClientRunner.runClient(tweetService);
     }
 

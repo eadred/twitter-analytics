@@ -134,6 +134,11 @@
 			<artifactId>protobuf-java</artifactId>
 			<version>3.2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-bigquery</artifactId>
+			<version>0.24.0-beta</version>
+		</dependency>
 	</dependencies>
 
 	<build>
