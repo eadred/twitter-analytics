@@ -11,8 +11,10 @@ import org.apache.beam.sdk.PipelineResult;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
+import org.apache.beam.sdk.transforms.Combine;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.values.KV;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -39,6 +41,7 @@ public class SentimentDataFlowRunner {
         p.apply(BigQueryIO.read().fromQuery(queryString))
                 .apply(ParDo.of(new ToDatedMessage()))
                 .apply(ParDo.of(new ToDatedSentiment()))
+                .apply(Combine.perKey(new Combiner()))
                 .apply(ParDo.of(new ToOutputText()))
                 .apply(TextIO.write().to("gs://eadred-dataflow/dummy_out/"));
 
@@ -66,7 +69,7 @@ public class SentimentDataFlowRunner {
         }
     }
 
-    public static class ToDatedSentiment extends DoFn<DatedMessage, DatedSentiment> {
+    public static class ToDatedSentiment extends DoFn<DatedMessage, KV<String, Double>> {
         private TwitterSentimentAnalyzerImpl sa;
 
         @StartBundle
@@ -83,16 +86,52 @@ public class SentimentDataFlowRunner {
         public void processElement(ProcessContext c) {
             DatedMessage msg = c.element();
 
-            c.output(new DatedSentiment(msg.getDate(), sa.getSentiment(msg.getMessage())));
+            c.output(KV.of(msg.getDate(), sa.getSentiment(msg.getMessage())));
         }
     }
 
-    public static class ToOutputText extends DoFn<DatedSentiment, String> {
+    public static class Combiner extends Combine.CombineFn<Double, CombinedSentiment, CombinedSentiment> {
+
+        @Override
+        public CombinedSentiment createAccumulator() {
+            return new CombinedSentiment(0,0);
+        }
+
+        @Override
+        public CombinedSentiment addInput(CombinedSentiment accum, Double sentiment) {
+            if (sentiment > 0.0) {
+                return new CombinedSentiment(accum.getNumPositive() + 1, accum.getNumNegative());
+            } else if (sentiment < 0.0) {
+                return new CombinedSentiment(accum.getNumPositive(), accum.getNumNegative() + 1);
+            } else {
+                return accum;
+            }
+        }
+
+        @Override
+        public CombinedSentiment mergeAccumulators(Iterable<CombinedSentiment> iterable) {
+            int positive = 0;
+            int negative = 0;
+            for (CombinedSentiment s : iterable) {
+                positive += s.getNumPositive();
+                negative += s.getNumNegative();
+            }
+
+            return new CombinedSentiment(positive, negative);
+        }
+
+        @Override
+        public CombinedSentiment extractOutput(CombinedSentiment accum) {
+            return accum;
+        }
+    }
+
+    public static class ToOutputText extends DoFn<KV<String, CombinedSentiment>, String> {
         @ProcessElement
         public void processElement(ProcessContext c) {
-            DatedSentiment snt = c.element();
+            KV<String, CombinedSentiment> snt = c.element();
 
-            c.output(snt.getDate() + "," + snt.getSentiment().toString());
+            c.output(snt.getKey() + "," + snt.getValue().getNumPositive() + "," + snt.getValue().getNumNegative());
         }
     }
 }
