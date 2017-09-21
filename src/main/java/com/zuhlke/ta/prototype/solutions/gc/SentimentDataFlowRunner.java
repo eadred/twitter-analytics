@@ -39,7 +39,6 @@ public class SentimentDataFlowRunner {
         opts.setProject(options.projectId);
         opts.setZone(options.zone);
         opts.setJobName(String.format("sentiment-%s", UUID.randomUUID().toString()));
-        // opts.setFilesToStage(new ArrayList<>()); // If this isn't set will default to all files on classpath
 
         Pipeline p = Pipeline.create(opts);
 
@@ -59,17 +58,6 @@ public class SentimentDataFlowRunner {
                         .withSchema(ToOutputRow.getSchema())
                         .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                         .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE));
-//                .apply(ParDo.of(new ToOutputText()))
-//                .apply(TextIO.write().to("gs://eadred-dataflow/dummy_out/"));
-//
-//        .apply(ParDo.of(new ToOutputRow()))
-//                .apply(BigQueryIO.write()
-//                        .to(tableRef)
-//                        .withSchema(TooutputRow.getSchema())
-//                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-//                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE))
-
-
 
         DataflowRunner runner = DataflowRunner.fromOptions(opts);
 
@@ -167,7 +155,7 @@ public class SentimentDataFlowRunner {
 
         static TableSchema getSchema() {
             List<TableFieldSchema> fields = new ArrayList<>();
-            fields.add(new TableFieldSchema().setName("date").setType("STRING"));
+            fields.add(new TableFieldSchema().setName("date").setType("DATE"));
             fields.add(new TableFieldSchema().setName("positive").setType("INTEGER"));
             fields.add(new TableFieldSchema().setName("negative").setType("INTEGER"));
             TableSchema schema = new TableSchema().setFields(fields);
