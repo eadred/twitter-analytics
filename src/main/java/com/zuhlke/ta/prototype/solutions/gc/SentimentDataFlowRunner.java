@@ -1,6 +1,9 @@
 package com.zuhlke.ta.prototype.solutions.gc;
 
+import com.google.api.services.bigquery.model.TableFieldSchema;
+import com.google.api.services.bigquery.model.TableReference;
 import com.google.api.services.bigquery.model.TableRow;
+import com.google.api.services.bigquery.model.TableSchema;
 import com.zuhlke.ta.prototype.Query;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import org.apache.beam.runners.dataflow.DataflowPipelineJob;
@@ -17,6 +20,9 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class SentimentDataFlowRunner {
@@ -37,13 +43,33 @@ public class SentimentDataFlowRunner {
 
         Pipeline p = Pipeline.create(opts);
 
+        TableReference tableRef = new TableReference();
+        tableRef.setProjectId(options.projectId);
+        tableRef.setDatasetId("camp_exercise");
+        tableRef.setTableId("results");
+
         String queryString = "SELECT message, date FROM camp_exercise.tweets_partial WHERE UPPER(message) CONTAINS UPPER('" + query.keyword + "') LIMIT 1000";
         p.apply(BigQueryIO.read().fromQuery(queryString))
                 .apply(ParDo.of(new ToDatedMessage()))
                 .apply(ParDo.of(new ToDatedSentiment()))
                 .apply(Combine.perKey(new Combiner()))
-                .apply(ParDo.of(new ToOutputText()))
-                .apply(TextIO.write().to("gs://eadred-dataflow/dummy_out/"));
+                .apply(ParDo.of(new ToOutputRow()))
+                .apply(BigQueryIO.writeTableRows()
+                        .to(tableRef)
+                        .withSchema(ToOutputRow.getSchema())
+                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE));
+//                .apply(ParDo.of(new ToOutputText()))
+//                .apply(TextIO.write().to("gs://eadred-dataflow/dummy_out/"));
+//
+//        .apply(ParDo.of(new ToOutputRow()))
+//                .apply(BigQueryIO.write()
+//                        .to(tableRef)
+//                        .withSchema(TooutputRow.getSchema())
+//                        .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+//                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE))
+
+
 
         DataflowRunner runner = DataflowRunner.fromOptions(opts);
 
@@ -123,6 +149,29 @@ public class SentimentDataFlowRunner {
         @Override
         public CombinedSentiment extractOutput(CombinedSentiment accum) {
             return accum;
+        }
+    }
+
+    public static class ToOutputRow extends DoFn<KV<String, CombinedSentiment>, TableRow> {
+        @ProcessElement
+        public void processElement(ProcessContext c) {
+            KV<String, CombinedSentiment> snt = c.element();
+
+            TableRow r = new TableRow()
+                    .set("date", c.element().getKey())
+                    .set("positive", c.element().getValue().getNumPositive())
+                    .set("negative", c.element().getValue().getNumNegative());
+
+            c.output(r);
+        }
+
+        static TableSchema getSchema() {
+            List<TableFieldSchema> fields = new ArrayList<>();
+            fields.add(new TableFieldSchema().setName("date").setType("STRING"));
+            fields.add(new TableFieldSchema().setName("positive").setType("INTEGER"));
+            fields.add(new TableFieldSchema().setName("negative").setType("INTEGER"));
+            TableSchema schema = new TableSchema().setFields(fields);
+            return schema;
         }
     }
 
