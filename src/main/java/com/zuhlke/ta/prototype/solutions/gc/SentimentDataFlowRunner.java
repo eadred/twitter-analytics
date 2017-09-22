@@ -84,23 +84,12 @@ public class SentimentDataFlowRunner {
     }
 
     public static class ToDatedSentiment extends DoFn<DatedMessage, KV<String, Double>> {
-        private TwitterSentimentAnalyzerImpl sa;
-
-        @StartBundle
-        public void startBundle(StartBundleContext c) {
-            sa = new TwitterSentimentAnalyzerImpl();
-        }
-
-        @FinishBundle
-        public void finishBundle(FinishBundleContext c) {
-            sa = null;
-        }
 
         @ProcessElement
         public void processElement(ProcessContext c) {
             DatedMessage msg = c.element();
 
-            c.output(KV.of(msg.getDate(), sa.getSentiment(msg.getMessage())));
+            c.output(KV.of(msg.getDate(), 1.0));
         }
     }
 
