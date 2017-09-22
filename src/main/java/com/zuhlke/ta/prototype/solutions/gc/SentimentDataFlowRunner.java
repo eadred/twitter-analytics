@@ -47,9 +47,8 @@ public class SentimentDataFlowRunner {
         tableRef.setDatasetId("camp_exercise");
         tableRef.setTableId("results");
 
-        String queryString = "SELECT message, date FROM camp_exercise.tweets_partial WHERE UPPER(message) CONTAINS UPPER('" + query.keyword + "')";
+        String queryString = "SELECT sentiment, date FROM camp_exercise.tweets_partial WHERE sentiment <> 0.0 AND UPPER(message) CONTAINS UPPER('" + query.keyword + "')";
         p.apply(BigQueryIO.read().fromQuery(queryString))
-                .apply(ParDo.of(new ToDatedMessage()))
                 .apply(ParDo.of(new ToDatedSentiment()))
                 .apply(Combine.perKey(new Combiner()))
                 .apply(ParDo.of(new ToOutputRow()))
@@ -71,25 +70,16 @@ public class SentimentDataFlowRunner {
         void setTempLocation(String value);
     }
 
-    public static class ToDatedMessage extends DoFn<TableRow, DatedMessage> {
+    public static class ToDatedSentiment extends DoFn<TableRow, KV<String, Double>> {
+
         @ProcessElement
         public void processElement(ProcessContext c) {
             TableRow row = c.element();
 
-            String message = (String)row.get("message");
+            Double sentiment = (Double)row.get("sentiment");
             String date = (String)row.get("date");
 
-            c.output(new DatedMessage(date, message));
-        }
-    }
-
-    public static class ToDatedSentiment extends DoFn<DatedMessage, KV<String, Double>> {
-
-        @ProcessElement
-        public void processElement(ProcessContext c) {
-            DatedMessage msg = c.element();
-
-            c.output(KV.of(msg.getDate(), 1.0));
+            c.output(KV.of(date, sentiment));
         }
     }
 
