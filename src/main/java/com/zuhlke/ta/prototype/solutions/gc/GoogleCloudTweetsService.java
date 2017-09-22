@@ -7,7 +7,6 @@ import com.zuhlke.ta.prototype.Tweet;
 import com.zuhlke.ta.prototype.TweetService;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,14 +14,14 @@ import java.util.stream.Collectors;
  * Created by eabi on 21/09/2017.
  */
 public class GoogleCloudTweetsService implements TweetService {
-    private final DataFlowOptions options;
-    private final SentimentDataFlowRunner runner;
+    private final ApplicationOptions options;
+    private final AggregationDataFlowRunner runner;
     private final BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
     private final TwitterSentimentAnalyzerImpl sentimentAnalyzer;
 
-    public GoogleCloudTweetsService(DataFlowOptions options) {
+    public GoogleCloudTweetsService(ApplicationOptions options) {
         this.options = options;
-        this.runner = new SentimentDataFlowRunner(options);
+        this.runner = new AggregationDataFlowRunner(options);
         this.sentimentAnalyzer = new TwitterSentimentAnalyzerImpl();
     }
 
@@ -75,11 +74,11 @@ public class GoogleCloudTweetsService implements TweetService {
 
         String query = String.format(
                 "SELECT %s, %s, %s FROM %s.%s ORDER BY date",
-                SentimentDataFlowRunner.ResultsDateColumn,
-                SentimentDataFlowRunner.ResultsPositiveColumn,
-                SentimentDataFlowRunner.ResultsNegativeColumn,
+                AggregationDataFlowRunner.ResultsDateColumn,
+                AggregationDataFlowRunner.ResultsPositiveColumn,
+                AggregationDataFlowRunner.ResultsNegativeColumn,
                 options.dataset,
-                SentimentDataFlowRunner.ResultsTable);
+                AggregationDataFlowRunner.ResultsTable);
 
         QueryRequest request = QueryRequest.of(query);
         QueryResponse response = bigquery.query(request);

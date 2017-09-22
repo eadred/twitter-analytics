@@ -2,21 +2,14 @@ package com.zuhlke.ta.web;
 
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
-import com.zuhlke.ta.prototype.solutions.common.TweetStore;
-import com.zuhlke.ta.prototype.solutions.gc.DataFlowOptions;
+import com.zuhlke.ta.prototype.solutions.gc.ApplicationOptions;
 import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsService;
-import com.zuhlke.ta.prototype.solutions.gc.SentimentDataFlowRunner;
-import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
-import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetStore;
-import com.zuhlke.ta.prototype.solutions.common.PersistentTweetService;
-import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import com.zuhlke.ta.twitterclient.TwitterClientRunner;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -27,7 +20,7 @@ import static spark.Spark.post;
 
 public class Application {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        TweetService tweetService = new GoogleCloudTweetsService(DataFlowOptions.fromConfig());
+        TweetService tweetService = new GoogleCloudTweetsService(ApplicationOptions.fromConfig());
         JobService jobService = new JobService(tweetService);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();

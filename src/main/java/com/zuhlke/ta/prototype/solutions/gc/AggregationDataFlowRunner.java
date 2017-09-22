@@ -5,13 +5,11 @@ import com.google.api.services.bigquery.model.TableReference;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.zuhlke.ta.prototype.Query;
-import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import org.apache.beam.runners.dataflow.DataflowPipelineJob;
 import org.apache.beam.runners.dataflow.DataflowRunner;
 import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
-import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.Combine;
@@ -19,21 +17,19 @@ import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SentimentDataFlowRunner {
-    private final DataFlowOptions options;
+public class AggregationDataFlowRunner {
+    private final ApplicationOptions options;
 
     public static final String ResultsTable = "results";
     public static final String ResultsDateColumn = "date";
     public static final String ResultsPositiveColumn = "positive";
     public static final String ResultsNegativeColumn = "negative";
 
-    public SentimentDataFlowRunner(DataFlowOptions options) {
+    public AggregationDataFlowRunner(ApplicationOptions options) {
         this.options = options;
     }
 

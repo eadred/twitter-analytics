@@ -3,7 +3,7 @@ package com.zuhlke.ta.prototype.solutions.gc;
 import java.io.IOException;
 import java.util.Properties;
 
-public class DataFlowOptions {
+public class ApplicationOptions {
     public Integer maxWorkers;
     public String tempLocation;
     public String stagingLocation;
@@ -12,11 +12,11 @@ public class DataFlowOptions {
     public String dataset;
     public String sourceTable;
 
-    public static DataFlowOptions fromConfig() throws IOException {
+    public static ApplicationOptions fromConfig() throws IOException {
         Properties props = new Properties();
-        props.load(DataFlowOptions.class.getClassLoader().getResourceAsStream("config.properties"));
+        props.load(ApplicationOptions.class.getClassLoader().getResourceAsStream("config.properties"));
 
-        DataFlowOptions result = new DataFlowOptions();
+        ApplicationOptions result = new ApplicationOptions();
         result.maxWorkers = Integer.parseInt(props.getProperty("maxWorkers"));
         result.tempLocation = props.getProperty("tempLocation");
         result.stagingLocation = props.getProperty("stagingLocation");
