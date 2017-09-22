@@ -13,19 +13,17 @@ import java.util.*;
  * Created by eabi on 21/09/2017.
  */
 public class GoogleCloudTweetsService implements TweetService {
+    private final DataFlowOptions options;
+    private final SentimentDataFlowRunner runner;
+
+    public GoogleCloudTweetsService(DataFlowOptions options) {
+        this.options = options;
+        this.runner = new SentimentDataFlowRunner(options);
+    }
+
     @Override
     public SentimentTimeline analyzeSentimentOverTime(Query q) {
-        SentimentDataFlowRunner runner = new SentimentDataFlowRunner();
-
-        try {
-            runner.run(q);
-        } catch (IOException e) {
-            System.out.println(e.toString());
-            return new SentimentTimeline(q.getKeyword());
-        } catch (Exception e) {
-            System.out.println(e.toString());
-            return new SentimentTimeline(q.getKeyword());
-        }
+        runner.run(q);
 
         try {
             Map<String, SentimentTimeline.Day> results = getResults();
@@ -50,7 +48,14 @@ public class GoogleCloudTweetsService implements TweetService {
         // Instantiates a client
         BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
 
-        String query = "SELECT date, positive, negative FROM camp_exercise.results ORDER BY date";
+        String query = String.format(
+                "SELECT %s, %s, %s FROM %s.%s ORDER BY date",
+                SentimentDataFlowRunner.ResultsDateColumn,
+                SentimentDataFlowRunner.ResultsPositiveColumn,
+                SentimentDataFlowRunner.ResultsNegativeColumn,
+                options.dataset,
+                SentimentDataFlowRunner.ResultsTable);
+
         QueryRequest request = QueryRequest.of(query);
         QueryResponse response = bigquery.query(request);
         // Wait for things to finish

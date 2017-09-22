@@ -9,6 +9,8 @@ public class DataFlowOptions {
     public String stagingLocation;
     public String projectId;
     public String zone;
+    public String dataset;
+    public String sourceTable;
 
     public static DataFlowOptions fromConfig() throws IOException {
         Properties props = new Properties();
@@ -20,6 +22,8 @@ public class DataFlowOptions {
         result.stagingLocation = props.getProperty("stagingLocation");
         result.projectId = props.getProperty("projectId");
         result.zone = props.getProperty("zone");
+        result.dataset = props.getProperty("dataset");
+        result.sourceTable = props.getProperty("sourceTable");
 
         return result;
     }

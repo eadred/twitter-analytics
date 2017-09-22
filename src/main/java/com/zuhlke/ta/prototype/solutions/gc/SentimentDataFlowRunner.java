@@ -26,12 +26,18 @@ import java.util.List;
 import java.util.UUID;
 
 public class SentimentDataFlowRunner {
-    public void run(Query query) throws IOException {
-        DataFlowOptions options = DataFlowOptions.fromConfig();
-        run(query, options);
+    private final DataFlowOptions options;
+
+    public static final String ResultsTable = "results";
+    public static final String ResultsDateColumn = "date";
+    public static final String ResultsPositiveColumn = "positive";
+    public static final String ResultsNegativeColumn = "negative";
+
+    public SentimentDataFlowRunner(DataFlowOptions options) {
+        this.options = options;
     }
 
-    public void run(Query query, DataFlowOptions options) {
+    public void run(Query query) {
         QueryOptions opts = PipelineOptionsFactory.create().as(QueryOptions.class);
         opts.setTempLocation(options.tempLocation);
         opts.setMaxNumWorkers(options.maxWorkers);
@@ -44,10 +50,15 @@ public class SentimentDataFlowRunner {
 
         TableReference tableRef = new TableReference();
         tableRef.setProjectId(options.projectId);
-        tableRef.setDatasetId("camp_exercise");
-        tableRef.setTableId("results");
+        tableRef.setDatasetId(options.dataset);
+        tableRef.setTableId(ResultsTable);
 
-        String queryString = "SELECT sentiment, date FROM camp_exercise.tweets_partial WHERE sentiment <> 0.0 AND UPPER(message) CONTAINS UPPER('" + query.keyword + "')";
+        String queryString = String.format(
+                "SELECT sentiment, date FROM %s.%s WHERE sentiment <> 0.0 AND UPPER(message) CONTAINS UPPER('%s')",
+                options.dataset,
+                options.sourceTable,
+                query.getKeyword());
+
         p.apply(BigQueryIO.read().fromQuery(queryString))
                 .apply(ParDo.of(new ToDatedSentiment()))
                 .apply(Combine.perKey(new Combiner()))
@@ -125,18 +136,18 @@ public class SentimentDataFlowRunner {
             KV<String, CombinedSentiment> snt = c.element();
 
             TableRow r = new TableRow()
-                    .set("date", c.element().getKey())
-                    .set("positive", c.element().getValue().getNumPositive())
-                    .set("negative", c.element().getValue().getNumNegative());
+                    .set(ResultsDateColumn, c.element().getKey())
+                    .set(ResultsPositiveColumn, c.element().getValue().getNumPositive())
+                    .set(ResultsNegativeColumn, c.element().getValue().getNumNegative());
 
             c.output(r);
         }
 
         static TableSchema getSchema() {
             List<TableFieldSchema> fields = new ArrayList<>();
-            fields.add(new TableFieldSchema().setName("date").setType("STRING"));
-            fields.add(new TableFieldSchema().setName("positive").setType("INTEGER"));
-            fields.add(new TableFieldSchema().setName("negative").setType("INTEGER"));
+            fields.add(new TableFieldSchema().setName(ResultsDateColumn).setType("STRING"));
+            fields.add(new TableFieldSchema().setName(ResultsPositiveColumn).setType("INTEGER"));
+            fields.add(new TableFieldSchema().setName(ResultsNegativeColumn).setType("INTEGER"));
             TableSchema schema = new TableSchema().setFields(fields);
             return schema;
         }

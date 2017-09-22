@@ -3,6 +3,7 @@ package com.zuhlke.ta.web;
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
 import com.zuhlke.ta.prototype.solutions.common.TweetStore;
+import com.zuhlke.ta.prototype.solutions.gc.DataFlowOptions;
 import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsService;
 import com.zuhlke.ta.prototype.solutions.gc.SentimentDataFlowRunner;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
@@ -26,7 +27,7 @@ import static spark.Spark.post;
 
 public class Application {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        TweetService tweetService = new GoogleCloudTweetsService();
+        TweetService tweetService = new GoogleCloudTweetsService(DataFlowOptions.fromConfig());
         JobService jobService = new JobService(tweetService);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();
