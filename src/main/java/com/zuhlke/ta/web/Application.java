@@ -37,7 +37,7 @@ public class Application {
         get("/pending/", (req, resp) -> jobService.getPending());
         post("/jobs/", (req, resp) -> enqueueJob(jobService, req, resp));
 
-//        TwitterClientRunner.runClient(tweetService);
+        TwitterClientRunner.runClient(tweetService);
     }
 
     private static ModelAndView homepageData(JobService jobService) {
