@@ -162,13 +162,4 @@ public class SentimentDataFlowRunner {
             return schema;
         }
     }
-
-    public static class ToOutputText extends DoFn<KV<String, CombinedSentiment>, String> {
-        @ProcessElement
-        public void processElement(ProcessContext c) {
-            KV<String, CombinedSentiment> snt = c.element();
-
-            c.output(snt.getKey() + "," + snt.getValue().getNumPositive() + "," + snt.getValue().getNumNegative());
-        }
-    }
 }
