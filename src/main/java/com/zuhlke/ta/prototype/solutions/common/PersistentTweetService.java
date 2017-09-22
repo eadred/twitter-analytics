@@ -17,7 +17,6 @@ import static java.util.stream.Collectors.groupingBy;
 public class PersistentTweetService implements TweetService {
     private final TweetStore store;
     private final SentimentAnalyzer sentimentAnalyzer;
-    private final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public PersistentTweetService(SentimentAnalyzer sentimentAnalyzer, TweetStore tweetStore) {
         this.sentimentAnalyzer = sentimentAnalyzer;
@@ -37,7 +36,7 @@ public class PersistentTweetService implements TweetService {
         final Map<String, Day> days = store.tweets()
                 .peek(tracer::increment)
                 .filter(t -> t.message.toLowerCase().contains(keyword))
-                .collect(groupingBy(t -> t.date.format(dateFormat), LinkedHashMap::new, toSentiment()));
+                .collect(groupingBy(t -> t.date, LinkedHashMap::new, toSentiment()));
 
         tracer.summarise();
 

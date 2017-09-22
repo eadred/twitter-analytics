@@ -36,7 +36,7 @@ public class AggregationDataFlowRunner {
     public void run(Query query) {
         QueryOptions opts = PipelineOptionsFactory.create().as(QueryOptions.class);
         opts.setTempLocation(options.tempLocation);
-        opts.setMaxNumWorkers(options.maxWorkers);
+        opts.setMaxNumWorkers(options.maxWorkersQuery);
         opts.setStagingLocation(options.stagingLocation);
         opts.setProject(options.projectId);
         opts.setZone(options.zone);

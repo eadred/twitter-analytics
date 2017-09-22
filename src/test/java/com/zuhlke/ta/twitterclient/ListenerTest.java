@@ -31,7 +31,7 @@ public class ListenerTest {
         target.onStatus(createTestStatus(expectedId, expectedUser, expectedMessage, Date.from(instant)));
 
         verify(sink).addTweet(
-                argThat(t -> t.id == expectedId && t.message.equals(expectedMessage) && t.userId.equals(expectedUser) && t.date.equals(expectedDate)));
+                argThat(t -> t.id == expectedId && t.message.equals(expectedMessage) && t.userId.equals(expectedUser) && t.getDate().equals(expectedDate)));
     }
 
     private Status createTestStatus(long id, String userScreenName, String text, Date createdAt) {

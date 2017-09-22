@@ -1,8 +1,12 @@
 package com.zuhlke.ta.web;
 
+import com.google.cloud.bigquery.BigQuery;
+import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
 import com.zuhlke.ta.prototype.solutions.gc.ApplicationOptions;
+import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudSentimentTimelineAnalyzer;
+import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
 import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsService;
 import com.zuhlke.ta.twitterclient.TwitterClientRunner;
 import spark.ModelAndView;
@@ -20,7 +24,11 @@ import static spark.Spark.post;
 
 public class Application {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        TweetService tweetService = new GoogleCloudTweetsService(ApplicationOptions.fromConfig());
+        ApplicationOptions options = ApplicationOptions.fromConfig();
+        BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+        GoogleCloudSentimentTimelineAnalyzer sentimentTimelineAnalyzer = new GoogleCloudSentimentTimelineAnalyzer(bigquery, options);
+        GoogleCloudTweetsImporter tweetsImporter = new GoogleCloudTweetsImporter(options);
+        TweetService tweetService = new GoogleCloudTweetsService(sentimentTimelineAnalyzer, tweetsImporter);
         JobService jobService = new JobService(tweetService);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();
