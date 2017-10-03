@@ -136,7 +136,7 @@ public class SentimentDataFlowRunner {
     public static class TweetToTableRow extends DoFn<Tweet, TableRow> {
 
         private static final String ID_COL = "id";
-        private static final String USER_ID_COL = "userId";
+        private static final String USER_ID_COL = "userid";
         private static final String MESSAGE_COL = "message";
         private static final String DATE_COL = "date";
         private static final String SENTIMENT_COL = "sentiment";

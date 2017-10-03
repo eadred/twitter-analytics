@@ -29,7 +29,7 @@ public class GoogleCloudTweetsImporter {
     private final ObjectMapper mapper;
     private final Publisher publisher;
 
-    private final SentimentDataFlowRunner sentimentRunner;
+//    private final SentimentDataFlowRunner sentimentRunner;
 
     public GoogleCloudTweetsImporter(ApplicationOptions options) throws IOException {
         mapper = new ObjectMapper();
@@ -37,8 +37,8 @@ public class GoogleCloudTweetsImporter {
         TopicName topicName = TopicName.create(options.projectId, options.topicName);
         publisher = Publisher.defaultBuilder(topicName).build();
 
-        sentimentRunner = new SentimentDataFlowRunner(options);
-        sentimentRunner.run();
+//        sentimentRunner = new SentimentDataFlowRunner(options);
+//        sentimentRunner.run();
     }
 
     public void importTweets(Collection<Tweet> tweets) {

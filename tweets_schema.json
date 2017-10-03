@@ -1,0 +1,22 @@
+[
+  {
+    "name": "id",
+    "type": "INT64"
+  },
+  {
+    "name": "userid",
+    "type": "STRING"
+  },
+  {
+    "name": "message",
+    "type": "STRING"
+  },
+  {
+    "name": "date",
+    "type": "DATE"
+  },
+  {
+    "name": "sentiment",
+    "type": "FLOAT"
+  }
+]
