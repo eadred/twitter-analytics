@@ -10,16 +10,18 @@ import com.zuhlke.ta.prototype.Tweet;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import org.apache.spark.*;
 import org.apache.spark.storage.StorageLevel;
-import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.*;
 import org.apache.spark.streaming.pubsub.PubsubUtils;
 import org.apache.spark.streaming.pubsub.SparkGCPCredentials;
 import org.apache.spark.streaming.pubsub.SparkPubsubMessage;
+import org.spark_project.guava.collect.Iterators;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
 import java.util.stream.Collectors;
 
 public class SparkSentiment {
@@ -30,58 +32,85 @@ public class SparkSentiment {
     private static final String DATE_COL = "date";
     private static final String SENTIMENT_COL = "sentiment";
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         String projectId = args[0];
         String topicName = args[1];
         String datasetId = args[2];
         String tableId = args[3];
 
-        String topicNameFull = "projects/" + projectId + "/topics/" + topicName;
+        int windowSizeSecs = 60;
+        if (args.length > 4) {
+            try {
+                windowSizeSecs = Integer.parseInt(args[4]);
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        Logger logger = LogManager.getRootLogger();
+
+        logger.info("Setting up Spark sentiment analysis");
 
         SparkGCPCredentials cred = new SparkGCPCredentials.Builder().metadataServiceAccount().build();
 
         SparkConf conf = new SparkConf().setAppName("Sentiment");
 
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(1));
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 
         JavaReceiverInputDStream<SparkPubsubMessage> receiver = PubsubUtils.createStream(
                 ssc,
                 projectId,
-                topicNameFull,
+                topicName,
                 "SentimentSubscription",
                 cred,
-                StorageLevel.apply(true, true, false, 0));
+                StorageLevel.MEMORY_AND_DISK());
 
         receiver
-                .map(SparkSentiment::getTweetFromMsg)
-                .filter(tw -> tw != null)
-                .window(Durations.seconds(60))
+                .flatMap(SparkSentiment::getTweetFromMsg)
+                .window(Durations.seconds(windowSizeSecs), Durations.seconds(windowSizeSecs))
                 .mapPartitions(SparkSentiment::calcSentiment)
-                .foreachRDD(rdd -> rdd.foreachPartition(ts -> sendTweetsToBigQuery(ts, datasetId, tableId)));
+                .mapPartitions(ts -> sendTweetsToBigQuery(ts, datasetId, tableId))
+                .print();
+
+        logger.info("Starting Spark sentiment analysis");
 
         ssc.start();
-        ssc.awaitTermination();
+
+        try {
+            ssc.awaitTermination();
+        } catch (InterruptedException e) {
+        }
+
+        logger.info("Completed Spark sentiment analysis");
     }
 
-    private static Tweet getTweetFromMsg(SparkPubsubMessage msg) {
+    private static Iterator<Tweet> getTweetFromMsg(SparkPubsubMessage msg) {
+        Logger logger = LogManager.getRootLogger();
+
         ObjectMapper mapper = new ObjectMapper();
         String payload;
         try {
             payload = new String(msg.getData(), "UTF-8");
         }
         catch (UnsupportedEncodingException e) {
-            return null;
+            logger.error("Error getting PubSub payload", e);
+            return Iterators.emptyIterator();
         }
 
         try {
-            return mapper.readValue(payload, Tweet.class);
+            return Iterators.singletonIterator(mapper.readValue(payload, Tweet.class));
         }
         catch (IOException e) {
-            return null;
+            logger.error("Error deserializing PubSub payload", e);
+            return Iterators.emptyIterator();
         }
     }
 
     private static Iterator<Tweet> calcSentiment(Iterator<Tweet> tweets) {
+        Logger logger = LogManager.getRootLogger();
+        logger.info("Calculating sentiment");
+
+        if (!tweets.hasNext()) return Iterators.emptyIterator();
+
         TwitterSentimentAnalyzerImpl analyzer = new TwitterSentimentAnalyzerImpl();
 
         return Streams.stream(tweets)
@@ -90,13 +119,16 @@ public class SparkSentiment {
                 .iterator();
     }
 
-    private static void sendTweetsToBigQuery(
+    private static Iterator<String> sendTweetsToBigQuery(
             Iterator<Tweet> tweets,
             String datasetId,
             String tableId) {
+
+        if (!tweets.hasNext()) return Iterators.emptyIterator();
+
         BigQuery query = BigQueryOptions.getDefaultInstance().getService();
 
-        Iterable<InsertAllRequest.RowToInsert> rows = Streams.stream(tweets)
+        List<InsertAllRequest.RowToInsert> rows = Streams.stream(tweets)
                 .map(SparkSentiment::tweetToRow)
                 .collect(Collectors.toList());
 
@@ -105,6 +137,22 @@ public class SparkSentiment {
                 tableId,
                 rows)
                 .build());
+
+        Logger logger = LogManager.getRootLogger();
+        if (resp.hasErrors()) {
+            logger.error("Error inserting into BiqQuery");
+
+            return resp.getInsertErrors()
+                    .values()
+                    .stream()
+                    .flatMap(errs -> errs.stream())
+                    .limit(10)
+                    .map(bqerr -> bqerr.getMessage())
+                    .iterator();
+        } else {
+            logger.info("Inserted rows into BiqQuery");
+            return Iterators.singletonIterator(String.format("Inserted %d rows", rows.size()));
+        }
     }
 
     private static InsertAllRequest.RowToInsert tweetToRow(Tweet tweet) {
@@ -112,7 +160,7 @@ public class SparkSentiment {
         map.put(ID_COL, tweet.id);
         map.put(USER_ID_COL, tweet.userId);
         map.put(MESSAGE_COL, tweet.message);
-        map.put(DATE_COL, tweet.getDate());
+        map.put(DATE_COL, tweet.date);
         map.put(SENTIMENT_COL, tweet.sentiment);
         return InsertAllRequest.RowToInsert.of(map);
     }

@@ -1,0 +1,1 @@
+gcloud beta pubsub subscriptions delete SentimentSubscription
