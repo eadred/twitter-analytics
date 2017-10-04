@@ -7,11 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ta-common" />
+        <module name="ta-spark-sentiment" />
         <module name="ta-webapp" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ta-common" target="1.8" />
+      <module name="ta-spark-sentiment" target="1.8" />
       <module name="ta-webapp" target="1.8" />
       <module name="twitter-analytics" target="1.5" />
     </bytecodeTargetLevel>
