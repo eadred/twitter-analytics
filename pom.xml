@@ -11,6 +11,7 @@
         <module>ta-common</module>
         <module>ta-webapp</module>
         <module>ta-spark-sentiment</module>
+        <module>ta-spark-sentiment-deps</module>
     </modules>
     <packaging>pom</packaging>
 
