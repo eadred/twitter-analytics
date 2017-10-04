@@ -6,12 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="twitter-analytics" />
+        <module name="ta-webapp" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="ta-shaded-dataflow" target="1.5" />
-      <module name="twitter-analytics" target="1.8" />
+      <module name="ta-webapp" target="1.8" />
+      <module name="twitter-analytics" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
