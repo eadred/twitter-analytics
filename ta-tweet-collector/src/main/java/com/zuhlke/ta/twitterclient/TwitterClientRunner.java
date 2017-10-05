@@ -1,6 +1,6 @@
 package com.zuhlke.ta.twitterclient;
 
-import com.zuhlke.ta.prototype.TweetService;
+import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
 import twitter4j.StatusListener;
 
 import java.io.IOException;
@@ -10,9 +10,9 @@ import java.util.Properties;
  * Created by eabi on 04/09/2017.
  */
 public class TwitterClientRunner {
-    public static void runClient(TweetService tweetService) throws IOException {
+    public static void runClient(GoogleCloudTweetsImporter tweetsImporter) throws IOException {
         Properties props = new Properties();
-        props.load(TwitterClientRunner.class.getClassLoader().getResourceAsStream("config.properties"));
+        props.load(TwitterClientRunner.class.getClassLoader().getResourceAsStream("tweet-collector.properties"));
 
         LocationBounds bounds = new LocationBounds(
                 Double.parseDouble(props.getProperty("boundsLatitudeMin")),
@@ -21,7 +21,7 @@ public class TwitterClientRunner {
                 Double.parseDouble(props.getProperty("boundsLongitudeMax")));
 
         StatusListener listener = new Listener(new TweetBuffer(
-                tweetService,
+                tweetsImporter,
                 Integer.parseInt(props.getProperty("tweetsBufferSize"))));
 
         TwitterClient client = new TwitterClient(

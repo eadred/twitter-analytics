@@ -1,8 +1,9 @@
 package com.zuhlke.ta.twitterclient;
 
 import com.zuhlke.ta.prototype.Tweet;
-import com.zuhlke.ta.prototype.TweetService;
 import static org.junit.Assert.*;
+
+import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.*;
 public class TweetBufferTest {
     @Test
     public void shouldOnlySendTweetsToServiceOnceBufferIsFull() {
-        TweetService service = mock(TweetService.class);
+        GoogleCloudTweetsImporter service = mock(GoogleCloudTweetsImporter.class);
         int bufferSize = 5;
 
         TweetBuffer target = new TweetBuffer(service, bufferSize);
@@ -37,7 +38,7 @@ public class TweetBufferTest {
 
     @Test
     public void shouldEmptyTheBufferAfterSendingTweets() {
-        TweetService service = mock(TweetService.class);
+        GoogleCloudTweetsImporter service = mock(GoogleCloudTweetsImporter.class);
         int bufferSize = 5;
 
         TweetBuffer target = new TweetBuffer(service, bufferSize);
@@ -62,7 +63,7 @@ public class TweetBufferTest {
         return new Tweet(0, "", "", LocalDate.of(2017, 9, 4), "");
     }
 
-    private StreamCountCapture prepareToCaptureSentTweetsCount(TweetService service) {
+    private StreamCountCapture prepareToCaptureSentTweetsCount(GoogleCloudTweetsImporter service) {
         StreamCountCapture capture = new StreamCountCapture();
 
         doAnswer(invocationOnMock -> {

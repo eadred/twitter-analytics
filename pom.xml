@@ -12,6 +12,7 @@
         <module>ta-webapp</module>
         <module>ta-spark-sentiment</module>
         <module>ta-spark-sentiment-deps</module>
+        <module>ta-tweet-collector</module>
     </modules>
     <packaging>pom</packaging>
 

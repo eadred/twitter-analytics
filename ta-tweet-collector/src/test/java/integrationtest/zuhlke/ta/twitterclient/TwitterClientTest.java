@@ -1,9 +1,7 @@
 package integrationtest.zuhlke.ta.twitterclient;
 
-import com.zuhlke.ta.prototype.Query;
-import com.zuhlke.ta.prototype.SentimentTimeline;
 import com.zuhlke.ta.prototype.Tweet;
-import com.zuhlke.ta.prototype.TweetService;
+import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
 import com.zuhlke.ta.twitterclient.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,13 +18,12 @@ public class TwitterClientTest {
     @Test
     public void shouldCollectTweets() throws InterruptedException {
         final List<Tweet> collectedTweets = new ArrayList<>();
-        TweetService service = new TweetService() {
-            @Override public SentimentTimeline analyzeSentimentOverTime(Query q) { return null; }
+        GoogleCloudTweetsImporter importer = new GoogleCloudTweetsImporter() {
             @Override public void importTweets(Collection<Tweet> tweets) { collectedTweets.addAll(tweets); }
         };
 
         TwitterClient client = new TwitterClient(
-                new Listener(new TweetBuffer(service, 10)),
+                new Listener(new TweetBuffer(importer, 10)),
                 new LocationBounds(-180.0, -90.0, 180.0, 90.0));
 
         client.run();

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ta-common/ta-common.iml" filepath="$PROJECT_DIR$/ta-common/ta-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/ta-spark-sentiment/ta-spark-sentiment.iml" filepath="$PROJECT_DIR$/ta-spark-sentiment/ta-spark-sentiment.iml" />
       <module fileurl="file://$PROJECT_DIR$/ta-spark-sentiment-deps/ta-spark-sentiment-deps.iml" filepath="$PROJECT_DIR$/ta-spark-sentiment-deps/ta-spark-sentiment-deps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ta-tweet-collector/ta-tweet-collector.iml" filepath="$PROJECT_DIR$/ta-tweet-collector/ta-tweet-collector.iml" />
       <module fileurl="file://$PROJECT_DIR$/ta-webapp/ta-webapp.iml" filepath="$PROJECT_DIR$/ta-webapp/ta-webapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/twitter-analytics.iml" filepath="$PROJECT_DIR$/twitter-analytics.iml" />
     </modules>

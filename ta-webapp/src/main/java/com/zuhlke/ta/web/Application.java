@@ -4,12 +4,8 @@ import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
-import com.zuhlke.ta.prototype.solutions.gc.ApplicationOptions;
-import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudSentimentTimelineAnalyzer;
-import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
-import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsService;
+import com.zuhlke.ta.prototype.solutions.gc.*;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
-import com.zuhlke.ta.twitterclient.TwitterClientRunner;
 import org.joda.time.Instant;
 import org.joda.time.Interval;
 import spark.ModelAndView;
@@ -30,7 +26,7 @@ public class Application {
         ApplicationOptions options = ApplicationOptions.fromConfig();
         BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
         GoogleCloudSentimentTimelineAnalyzer sentimentTimelineAnalyzer = new GoogleCloudSentimentTimelineAnalyzer(bigquery, options);
-        GoogleCloudTweetsImporter tweetsImporter = new GoogleCloudTweetsImporter(options);
+        GoogleCloudTweetsImporter tweetsImporter = new GoogleCloudTweetsImporterImpl(options);
         TweetService tweetService = new GoogleCloudTweetsService(sentimentTimelineAnalyzer, tweetsImporter);
         JobService jobService = new JobService(tweetService);
 
@@ -40,8 +36,6 @@ public class Application {
         get("/results/", (req, resp) -> jobService.getResults());
         get("/pending/", (req, resp) -> jobService.getPending());
         post("/jobs/", (req, resp) -> enqueueJob(jobService, req, resp));
-
-        TwitterClientRunner.runClient(tweetService);
     }
 
     private static ModelAndView homepageData(JobService jobService) {

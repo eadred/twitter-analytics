@@ -12,7 +12,7 @@ public class TweetTests {
 
     @Test
     public void Tweet_serialization_round_trip() throws JsonProcessingException, IOException {
-        Tweet tweet = new Tweet(5L, "someuser", "some message", LocalDate.now(), 1.0, "en");
+        Tweet tweet = new Tweet(5L, "someuser", "some message", LocalDate.now(), "en", 1.0);
 
         ObjectMapper mapper = new ObjectMapper();
 
