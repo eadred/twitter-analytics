@@ -34,6 +34,7 @@ public class SparkSentiment {
 
     public static final int DEFAULT_WINDOW_SIZE_SECS = 60;
     public static final int DEFAULT_PARTITIONS = 4;
+    public static final String ENGLISH = "en";
 
     private static String projectId;
     private static String topicName;
@@ -69,6 +70,7 @@ public class SparkSentiment {
 
         receiver
                 .flatMap(SparkSentiment::getTweetFromMsg)
+                .filter(t -> t.lang.equalsIgnoreCase(ENGLISH))
                 .window(Durations.seconds(windowSizeSecs), Durations.seconds(windowSizeSecs))
                 .mapPartitions(SparkSentiment::calcSentiment)
                 .mapPartitions(ts -> sendTweetsToBigQuery(ts, dataset, table))
