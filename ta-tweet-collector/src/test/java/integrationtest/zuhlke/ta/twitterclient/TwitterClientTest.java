@@ -24,7 +24,7 @@ public class TwitterClientTest {
 
         TwitterClient client = new TwitterClient(
                 new Listener(new TweetBuffer(importer, 10)),
-                new LocationBounds(-180.0, -90.0, 180.0, 90.0));
+                new LocationBounds(-90.0, -180.0, 90.0, 180.0));
 
         client.run();
 
