@@ -40,7 +40,6 @@ public class SparkSentiment {
     private static String datasetId;
     private static String tableId;
     private static int windowSizeSecs;
-    private static int partitions;
 
     public static void main(String[] args) {
         parseArgs(args);
@@ -71,7 +70,6 @@ public class SparkSentiment {
         receiver
                 .flatMap(SparkSentiment::getTweetFromMsg)
                 .window(Durations.seconds(windowSizeSecs), Durations.seconds(windowSizeSecs))
-                .repartition(partitions)
                 .mapPartitions(SparkSentiment::calcSentiment)
                 .mapPartitions(ts -> sendTweetsToBigQuery(ts, dataset, table))
                 .print();
@@ -98,14 +96,6 @@ public class SparkSentiment {
         if (args.length > 4) {
             try {
                 windowSizeSecs = Integer.parseInt(args[4]);
-            } catch (NumberFormatException e) {
-            }
-        }
-
-        partitions = DEFAULT_PARTITIONS;
-        if (args.length > 5) {
-            try {
-                partitions = Integer.parseInt(args[5]);
             } catch (NumberFormatException e) {
             }
         }

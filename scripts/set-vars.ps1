@@ -6,4 +6,3 @@ $topic="tweets"
 $cluster="spark-sentiment"
 $jarloc="gs://eadred-dataflow/spark"
 $windowsizesecs=60
-$partitions=12
