@@ -131,12 +131,18 @@ public class SparkSentiment {
 
         if (!tweets.hasNext()) return Iterators.emptyIterator();
 
-        TwitterSentimentAnalyzerImpl analyzer = new TwitterSentimentAnalyzerImpl();
+        AnalyzerContext context = SentimentAnalyzerPool.Instance.getAnalyzer();
 
-        return Streams.stream(tweets)
-                .map(t -> new Tweet(t.id, t.userId, t.message, t.getDate(), t.lang, analyzer.getSentiment(t.message)))
-                .collect(Collectors.toList())
-                .iterator();
+        try {
+            TwitterSentimentAnalyzerImpl analyzer = context.getAnalyzer();
+
+            return Streams.stream(tweets)
+                    .map(t -> new Tweet(t.id, t.userId, t.message, t.getDate(), t.lang, analyzer.getSentiment(t.message)))
+                    .collect(Collectors.toList())
+                    .iterator();
+        } finally {
+            SentimentAnalyzerPool.Instance.returnAnalyzer(context);
+        }
     }
 
     private static Iterator<String> sendTweetsToBigQuery(
