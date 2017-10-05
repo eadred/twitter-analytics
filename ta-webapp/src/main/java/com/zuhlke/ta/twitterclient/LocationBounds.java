@@ -23,7 +23,7 @@ public class LocationBounds {
     }
 
     public double[][] toLocationsArray() {
-        double[][] result = {{latitudeMin,longitudeMin},{latitudeMax,longitudeMax}};
+        double[][] result = {{longitudeMin,latitudeMin},{longitudeMax,latitudeMax}};
         return result;
     }
 }
