@@ -59,7 +59,7 @@ public class TweetBufferTest {
     }
 
     private Tweet createTestTweet() {
-        return new Tweet(0, "", "", LocalDate.of(2017, 9, 4));
+        return new Tweet(0, "", "", LocalDate.of(2017, 9, 4), "");
     }
 
     private StreamCountCapture prepareToCaptureSentTweetsCount(TweetService service) {

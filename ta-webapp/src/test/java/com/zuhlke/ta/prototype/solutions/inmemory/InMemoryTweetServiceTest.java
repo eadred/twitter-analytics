@@ -52,6 +52,7 @@ public class InMemoryTweetServiceTest {
                 random.nextInt(),
                 "a user id" + random.nextInt(),
                 message,
-                LocalDate.of(2017, month, day));
+                LocalDate.of(2017, month, day),
+                "en");
     }
 }

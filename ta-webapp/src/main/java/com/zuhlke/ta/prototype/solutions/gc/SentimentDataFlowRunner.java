@@ -127,7 +127,7 @@ public class SentimentDataFlowRunner {
             Tweet tweet = c.element();
 
             double sentiment = analyzer.getSentiment(tweet.message);
-            Tweet analyzedTweet = new Tweet(tweet.id, tweet.userId, tweet.message, tweet.getDate(), sentiment);
+            Tweet analyzedTweet = new Tweet(tweet.id, tweet.userId, tweet.message, tweet.getDate(), tweet.lang, sentiment);
 
             c.output(analyzedTweet);
         }

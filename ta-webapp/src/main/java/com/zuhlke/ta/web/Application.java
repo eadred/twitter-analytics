@@ -8,7 +8,10 @@ import com.zuhlke.ta.prototype.solutions.gc.ApplicationOptions;
 import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudSentimentTimelineAnalyzer;
 import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
 import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsService;
+import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import com.zuhlke.ta.twitterclient.TwitterClientRunner;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -16,8 +19,8 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static spark.Spark.get;
 import static spark.Spark.post;

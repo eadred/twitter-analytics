@@ -132,7 +132,7 @@ public class SparkSentiment {
         TwitterSentimentAnalyzerImpl analyzer = new TwitterSentimentAnalyzerImpl();
 
         return Streams.stream(tweets)
-                .map(t -> new Tweet(t.id, t.userId, t.message, t.getDate(), analyzer.getSentiment(t.message)))
+                .map(t -> new Tweet(t.id, t.userId, t.message, t.getDate(), t.lang, analyzer.getSentiment(t.message)))
                 .collect(Collectors.toList())
                 .iterator();
     }

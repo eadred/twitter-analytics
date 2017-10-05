@@ -28,20 +28,24 @@ public class Tweet implements Serializable {
     @JsonProperty
     public final double sentiment;
 
+    @JsonProperty
+    public final String lang;
+
     public Tweet() {
         // For Jackson
-        this(0L, "", "", LocalDate.MIN, 0.0);
+        this(0L, "", "", LocalDate.MIN, "", 0.0);
     }
 
-    public Tweet(long id, String userId, String message, LocalDate date) {
-        this(id, userId, message, date, 0.0);
+    public Tweet(long id, String userId, String message, LocalDate date, String lang) {
+        this(id, userId, message, date, lang, 0.0);
     }
 
-    public Tweet(long id, String userId, String message, LocalDate date, double sentiment) {
+    public Tweet(long id, String userId, String message, LocalDate date, String lang, double sentiment) {
         this.id = id;
         this.userId = userId;
         this.message = message;
         this.date = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        this.lang = lang;
         this.sentiment = sentiment;
     }
 

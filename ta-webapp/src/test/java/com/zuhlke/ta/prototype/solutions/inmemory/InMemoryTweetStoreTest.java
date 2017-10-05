@@ -20,6 +20,6 @@ public class InMemoryTweetStoreTest {
     }
 
     private Tweet anyTweet() {
-        return new Tweet(0, "userid", "message", LocalDate.now());
+        return new Tweet(0, "userid", "message", LocalDate.now(), "en");
     }
 }
