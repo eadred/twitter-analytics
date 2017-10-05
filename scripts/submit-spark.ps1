@@ -13,4 +13,5 @@ gcloud dataproc jobs submit spark `
 	$topic `
 	$dataset `
 	$table `
-	$windowsizesecs
+	$windowsizesecs `
+	$partitions

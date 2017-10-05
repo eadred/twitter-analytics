@@ -32,19 +32,18 @@ public class SparkSentiment {
     private static final String DATE_COL = "date";
     private static final String SENTIMENT_COL = "sentiment";
 
-    public static void main(String[] args) {
-        String projectId = args[0];
-        String topicName = args[1];
-        String datasetId = args[2];
-        String tableId = args[3];
+    public static final int DEFAULT_WINDOW_SIZE_SECS = 60;
+    public static final int DEFAULT_PARTITIONS = 4;
 
-        int windowSizeSecs = 60;
-        if (args.length > 4) {
-            try {
-                windowSizeSecs = Integer.parseInt(args[4]);
-            } catch (NumberFormatException e) {
-            }
-        }
+    private static String projectId;
+    private static String topicName;
+    private static String datasetId;
+    private static String tableId;
+    private static int windowSizeSecs;
+    private static int partitions;
+
+    public static void main(String[] args) {
+        parseArgs(args);
 
         Logger logger = LogManager.getRootLogger();
 
@@ -64,11 +63,17 @@ public class SparkSentiment {
                 cred,
                 StorageLevel.MEMORY_AND_DISK());
 
+        // Create local variables from static members for use in the sendTweetsToBigQuery closure
+        String dataset = datasetId;
+        String table = tableId;
+        logger.info(String.format("Output table will be %s.%s", dataset, table));
+
         receiver
                 .flatMap(SparkSentiment::getTweetFromMsg)
                 .window(Durations.seconds(windowSizeSecs), Durations.seconds(windowSizeSecs))
+                .repartition(partitions)
                 .mapPartitions(SparkSentiment::calcSentiment)
-                .mapPartitions(ts -> sendTweetsToBigQuery(ts, datasetId, tableId))
+                .mapPartitions(ts -> sendTweetsToBigQuery(ts, dataset, table))
                 .print();
 
         logger.info("Starting Spark sentiment analysis");
@@ -81,6 +86,29 @@ public class SparkSentiment {
         }
 
         logger.info("Completed Spark sentiment analysis");
+    }
+
+    private static void parseArgs(String[] args) {
+        projectId = args[0];
+        topicName = args[1];
+        datasetId = args[2];
+        tableId = args[3];
+
+        windowSizeSecs = DEFAULT_WINDOW_SIZE_SECS;
+        if (args.length > 4) {
+            try {
+                windowSizeSecs = Integer.parseInt(args[4]);
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        partitions = DEFAULT_PARTITIONS;
+        if (args.length > 5) {
+            try {
+                partitions = Integer.parseInt(args[5]);
+            } catch (NumberFormatException e) {
+            }
+        }
     }
 
     private static Iterator<Tweet> getTweetFromMsg(SparkPubsubMessage msg) {
