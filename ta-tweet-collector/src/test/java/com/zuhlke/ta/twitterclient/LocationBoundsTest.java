@@ -19,7 +19,7 @@ public class LocationBoundsTest {
                 expectedLatMax,
                 expectedLongMax);
 
-        double[][] expected = {{expectedLatMin, expectedLongMin}, {expectedLatMax, expectedLongMax}};
+        double[][] expected = {{expectedLongMin, expectedLatMin}, {expectedLongMax, expectedLatMax}};
         assertArrayEquals(expected, bounds.toLocationsArray());
     }
 }
