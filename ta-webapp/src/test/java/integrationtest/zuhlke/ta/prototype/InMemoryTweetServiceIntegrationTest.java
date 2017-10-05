@@ -1,5 +1,6 @@
 package integrationtest.zuhlke.ta.prototype;
 
+import com.zuhlke.ta.SlowTests;
 import com.zuhlke.ta.prototype.Importer;
 import com.zuhlke.ta.prototype.Query;
 import com.zuhlke.ta.prototype.SentimentTimeline;
@@ -7,11 +8,13 @@ import com.zuhlke.ta.prototype.solutions.common.PersistentTweetService;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryTweetService;
 import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 
 public class InMemoryTweetServiceIntegrationTest {
     @Test
+    @Category(SlowTests.class)
     public void testAnalyzingTweets() throws Exception {
         PersistentTweetService tweetService = new InMemoryTweetService(new TwitterSentimentAnalyzerImpl());
         Importer importer = new Importer(tweetService);

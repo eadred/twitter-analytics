@@ -125,6 +125,7 @@
 					<parallel>all</parallel>
 					<threadCount>4</threadCount>
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<excludedGroups>com.zuhlke.ta.SlowTests</excludedGroups>
 				</configuration>
 				<dependencies>
 					<dependency>
