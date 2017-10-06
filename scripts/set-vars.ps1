@@ -1,3 +1,5 @@
+$env:PYTHONIOENCODING='utf-8'
+
 $project="analytics-174711"
 $table="tweets"
 $region="europe-west1"
