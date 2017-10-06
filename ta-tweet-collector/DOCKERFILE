@@ -1,0 +1,11 @@
+FROM openjdk
+
+RUN mkdir /usr/local/app
+COPY ./target/ta-tweet-collector-bundled-1.0-SNAPSHOT.jar /usr/local/app/ta-tweet-collector-bundled-1.0-SNAPSHOT.jar
+COPY ./credentials.json /usr/local/app/credentials.json
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/local/app/credentials.json
+
+WORKDIR /usr/local/app
+
+ENTRYPOINT [ "java", "-cp", "ta-tweet-collector-bundled-1.0-SNAPSHOT.jar", "com.zuhlke.ta.twitterclient.Application" ]

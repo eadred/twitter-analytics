@@ -1,0 +1,1 @@
+docker run -d --name collector tweet-collector
