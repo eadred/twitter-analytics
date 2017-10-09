@@ -26,16 +26,13 @@ public class GoogleCloudSentimentTimelineAnalyzer {
     public SentimentTimeline analyzeSentimentOverTime(Query q) {
         try {
             return getResults(q);
-        } catch (InterruptedException e) {
-            System.out.println(e.toString());
-            return new SentimentTimeline(q.getKeyword());
         } catch (Exception e) {
             System.out.println(e.toString());
             return new SentimentTimeline(q.getKeyword());
         }
     }
 
-    private SentimentTimeline getResults(Query q) throws InterruptedException {
+    private SentimentTimeline getResults(Query q) {
         QueryResponse positiveResp = runQuery(q, SentimentType.Positive);
         QueryResponse negativeResp = runQuery(q, SentimentType.Negative);
 
@@ -57,18 +54,18 @@ public class GoogleCloudSentimentTimelineAnalyzer {
         QueryRequest request = QueryRequest.newBuilder(query)
                 .addNamedParameter("keyword", QueryParameterValue.string(q.getKeyword()))
                 .setUseLegacySql(false)
+                .setMaxWaitTime(1000L)
                 .build();
 
         return bigquery.query(request);
     }
 
-    private Map<String, SentimentTimeline.Day> getResultsFromResponse(QueryResponse response, SentimentType type) throws InterruptedException {
+    private Map<String, SentimentTimeline.Day> getResultsFromResponse(QueryResponse response, SentimentType type) {
         Map<String, SentimentTimeline.Day> returnVal = new HashMap<>() ;
 
         // Wait for things to finish
         while (!response.jobCompleted()) {
-            Thread.sleep(1000);
-            response = bigquery.getQueryResults(response.getJobId());
+            response = bigquery.getQueryResults(response.getJobId(), BigQuery.QueryResultsOption.maxWaitTime(1000L));
         }
         if (response.hasErrors()) {
             // handle errors
