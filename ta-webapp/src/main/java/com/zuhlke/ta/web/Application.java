@@ -21,8 +21,7 @@ public class Application {
     public static void main(String[] args) throws IOException, URISyntaxException {
         ApplicationOptions options = ApplicationOptions.fromConfig();
         BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
-        GoogleCloudSentimentTimelineAnalyzer sentimentTimelineAnalyzer = new GoogleCloudSentimentTimelineAnalyzer(bigquery, options);
-        TweetService tweetService = new GoogleCloudTweetsService(sentimentTimelineAnalyzer);
+        TweetService tweetService = new GoogleCloudTweetsService(bigquery, options);
         JobService jobService = new JobService(tweetService);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();
