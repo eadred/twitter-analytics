@@ -4,6 +4,6 @@ import com.zuhlke.ta.prototype.Tweet;
 
 import java.util.Collection;
 
-public interface GoogleCloudTweetsImporter {
+public interface TweetsImporter {
     void importTweets(Collection<Tweet> tweets);
 }

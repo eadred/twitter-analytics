@@ -1,6 +1,7 @@
 package com.zuhlke.ta.prototype;
 
 import com.google.common.base.Strings;
+import com.zuhlke.ta.prototype.solutions.gc.TweetsImporter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,10 +18,10 @@ public class Importer {
     private static final int MAX_TWEETS_TO_IMPORT = 10000;
 
     private List<Tweet> batch = new ArrayList<>(BATCH_SIZE);
-    private TweetService tweetService;
+    private TweetsImporter tweetService;
 
-    public Importer(TweetService tweetService) {
-        this.tweetService = tweetService;
+    public Importer(TweetsImporter tweetsImporter) {
+        this.tweetService = tweetsImporter;
     }
 
     public void importTweetsFrom(File file) throws IOException {

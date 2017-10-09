@@ -1,6 +1,6 @@
 package com.zuhlke.ta.twitterclient;
 
-import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
+import com.zuhlke.ta.prototype.solutions.gc.TweetsImporter;
 import twitter4j.StatusListener;
 
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.Properties;
  * Created by eabi on 04/09/2017.
  */
 public class TwitterClientRunner {
-    public static void runClient(GoogleCloudTweetsImporter tweetsImporter) throws IOException {
+    public static void runClient(TweetsImporter tweetsImporter) throws IOException {
         Properties props = new Properties();
         props.load(TwitterClientRunner.class.getClassLoader().getResourceAsStream("tweet-collector.properties"));
 

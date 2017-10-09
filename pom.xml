@@ -85,6 +85,11 @@
                 <artifactId>netty-transport</artifactId>
                 <version>4.1.14.Final</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>23.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

@@ -11,7 +11,7 @@ import com.zuhlke.ta.prototype.Tweet;
 import java.io.IOException;
 import java.util.Collection;
 
-public class GoogleCloudTweetsImporterImpl implements GoogleCloudTweetsImporter {
+public class GoogleCloudTweetsImporterImpl implements TweetsImporter {
     private final ObjectMapper mapper;
     private final Publisher publisher;
 

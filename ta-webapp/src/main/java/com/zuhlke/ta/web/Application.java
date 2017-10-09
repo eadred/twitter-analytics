@@ -5,9 +5,6 @@ import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
 import com.zuhlke.ta.prototype.solutions.gc.*;
-import com.zuhlke.ta.sentiment.TwitterSentimentAnalyzerImpl;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -16,7 +13,6 @@ import spark.template.freemarker.FreeMarkerEngine;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -26,8 +22,7 @@ public class Application {
         ApplicationOptions options = ApplicationOptions.fromConfig();
         BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
         GoogleCloudSentimentTimelineAnalyzer sentimentTimelineAnalyzer = new GoogleCloudSentimentTimelineAnalyzer(bigquery, options);
-        GoogleCloudTweetsImporter tweetsImporter = new GoogleCloudTweetsImporterImpl(options);
-        TweetService tweetService = new GoogleCloudTweetsService(sentimentTimelineAnalyzer, tweetsImporter);
+        TweetService tweetService = new GoogleCloudTweetsService(sentimentTimelineAnalyzer);
         JobService jobService = new JobService(tweetService);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();

@@ -2,6 +2,7 @@ package com.zuhlke.ta.prototype.solutions.common;
 
 import com.zuhlke.ta.prototype.*;
 import com.zuhlke.ta.prototype.SentimentTimeline.Day;
+import com.zuhlke.ta.prototype.solutions.gc.TweetsImporter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 
-public class PersistentTweetService implements TweetService {
+public class PersistentTweetService implements TweetService, TweetsImporter {
     private final TweetStore store;
     private final SentimentAnalyzer sentimentAnalyzer;
 

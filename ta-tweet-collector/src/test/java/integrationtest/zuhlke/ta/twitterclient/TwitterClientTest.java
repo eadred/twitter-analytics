@@ -1,7 +1,7 @@
 package integrationtest.zuhlke.ta.twitterclient;
 
 import com.zuhlke.ta.prototype.Tweet;
-import com.zuhlke.ta.prototype.solutions.gc.GoogleCloudTweetsImporter;
+import com.zuhlke.ta.prototype.solutions.gc.TweetsImporter;
 import com.zuhlke.ta.twitterclient.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -18,7 +18,7 @@ public class TwitterClientTest {
     @Test
     public void shouldCollectTweets() throws InterruptedException {
         final List<Tweet> collectedTweets = new ArrayList<>();
-        GoogleCloudTweetsImporter importer = new GoogleCloudTweetsImporter() {
+        TweetsImporter importer = new TweetsImporter() {
             @Override public void importTweets(Collection<Tweet> tweets) { collectedTweets.addAll(tweets); }
         };
 
