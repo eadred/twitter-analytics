@@ -32,9 +32,7 @@ public class SentimentTimeline {
         }
 
         public static Day merge(Day left, Day right) {
-            left.goodTweets += right.goodTweets;
-            left.badTweets += right.badTweets;
-            return left;
+            return new Day(left.goodTweets + right.goodTweets, left.badTweets + right.badTweets);
         }
 
         public int getGoodTweets() { return goodTweets; }
