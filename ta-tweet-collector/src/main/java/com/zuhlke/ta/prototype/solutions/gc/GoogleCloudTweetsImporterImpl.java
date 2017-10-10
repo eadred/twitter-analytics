@@ -15,11 +15,10 @@ public class GoogleCloudTweetsImporterImpl implements TweetsImporter {
     private final ObjectMapper mapper;
     private final Publisher publisher;
 
-    public GoogleCloudTweetsImporterImpl(ApplicationOptions options) throws IOException {
+    public GoogleCloudTweetsImporterImpl(String projectId, String topicName) throws IOException {
         mapper = new ObjectMapper();
 
-        TopicName topicName = TopicName.create(options.projectId, options.topicName);
-        publisher = Publisher.defaultBuilder(topicName).build();
+        publisher = Publisher.defaultBuilder(TopicName.create(projectId, topicName)).build();
     }
 
     @Override

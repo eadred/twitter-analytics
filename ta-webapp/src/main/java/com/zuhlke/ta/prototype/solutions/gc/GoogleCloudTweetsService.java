@@ -21,10 +21,11 @@ public class GoogleCloudTweetsService implements TweetService {
 
     public GoogleCloudTweetsService(
             BigQuery bigquery,
-            ApplicationOptions options) {
+            String dataset,
+            String sourceTable) {
         this.bigquery = bigquery;
-        this.dataset = options.dataset;
-        this.sourceTable = options.sourceTable;
+        this.dataset = dataset;
+        this.sourceTable = sourceTable;
     }
 
     @Override

@@ -2,14 +2,11 @@ package com.zuhlke.ta.prototype;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.beam.sdk.coders.AvroCoder;
-import org.apache.beam.sdk.coders.DefaultCoder;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@DefaultCoder(AvroCoder.class)
 public class Tweet implements Serializable {
     @JsonProperty
     public final long id;

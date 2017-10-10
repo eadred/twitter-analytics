@@ -19,9 +19,10 @@ import static spark.Spark.post;
 
 public class Application {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        ApplicationOptions options = ApplicationOptions.fromConfig();
+        String dataset = args[0];
+        String sourceTable = args[1];
         BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
-        TweetService tweetService = new GoogleCloudTweetsService(bigquery, options);
+        TweetService tweetService = new GoogleCloudTweetsService(bigquery, dataset, sourceTable);
         JobService jobService = new JobService(tweetService);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();
