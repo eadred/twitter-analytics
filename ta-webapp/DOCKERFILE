@@ -10,4 +10,4 @@ ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/local/app/credentials.json
 
 WORKDIR /usr/local/app
 
-ENTRYPOINT [ "java", "-cp", "ta-webapp-bundled-1.0-SNAPSHOT.jar", "com.zuhlke.ta.web.Application", "camp_exercise", "tweets" ]
+ENTRYPOINT [ "java", "-cp", "ta-webapp-bundled-1.0-SNAPSHOT.jar", "com.zuhlke.ta.web.Application", "analytics-174711", "camp_exercise", "tweets" ]
