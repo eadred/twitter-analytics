@@ -1,0 +1,11 @@
+FROM couchbase:community-4.5.1
+
+COPY ./cluster-init.sh /cluster-init.sh
+RUN chmod a+x /cluster-init.sh
+
+ENV MEMORY_QUOTA 512
+ENV SERVICES "data"
+ENV USERNAME Administrator
+ENV PASSWORD Administrator
+
+ENTRYPOINT ["/cluster-init.sh"]

@@ -7,4 +7,5 @@ kubectl expose deployment ta-webapp --type="LoadBalancer"
 kubectl get service ta-webapp
 
 # To delete:
+# kubectl delete service ta-webapp
 # kubectl delete deployment ta-webapp
