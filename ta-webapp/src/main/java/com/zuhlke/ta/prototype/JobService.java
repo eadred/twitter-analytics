@@ -6,12 +6,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public final class JobService extends Thread {
-    private final List<SentimentTimeline> results = Collections.synchronizedList(new ArrayList<>());
+    private final ResultsStore resultsStore;
     private final BlockingQueue<Query> pendingQueries = new LinkedBlockingQueue<>();
     private TweetService tweetService;
 
-    public JobService(TweetService tweetService) {
+    public JobService(TweetService tweetService, ResultsStore resultsStore) {
         this.tweetService = tweetService;
+        this.resultsStore = resultsStore;
         this.start();
     }
 
@@ -24,7 +25,7 @@ public final class JobService extends Thread {
     }
 
     public List<SentimentTimeline> getResults() {
-        return results;
+        return resultsStore.getResults();
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
@@ -34,7 +35,7 @@ public final class JobService extends Thread {
             while (true) {
                 Optional.ofNullable(pendingQueries.poll(1, TimeUnit.SECONDS))
                         .map(q -> tweetService.analyzeSentimentOverTime(q))
-                        .ifPresent(results::add);
+                        .ifPresent(resultsStore::storeResults);
             }
         } catch (InterruptedException e) {
             // this is ok

@@ -5,6 +5,7 @@ import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
 import com.zuhlke.ta.prototype.solutions.gc.*;
+import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryResultsStore;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -24,7 +25,8 @@ public class Application {
         String sourceTable = args[2];
         BigQuery bigquery = BigQueryOptions.newBuilder().setProjectId(projectId).build().getService();
         TweetService tweetService = new GoogleCloudTweetsService(bigquery, dataset, sourceTable);
-        JobService jobService = new JobService(tweetService);
+        ResultsStore resultsStore = new InMemoryResultsStore();
+        JobService jobService = new JobService(tweetService, resultsStore);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();
 
