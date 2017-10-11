@@ -41,7 +41,7 @@ public class PersistentTweetService implements TweetService, TweetsImporter {
 
         tracer.summarise();
 
-        return new SentimentTimeline(q.keyword, days);
+        return new SentimentTimeline(q, days);
     }
 
     private Collector<Tweet, Day, Day> toSentiment() {

@@ -1,24 +1,27 @@
 package com.zuhlke.ta.prototype;
 
+import com.couchbase.client.deps.com.fasterxml.jackson.annotation.JsonIgnore;
 import com.couchbase.client.deps.com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.Instant;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
 public class SentimentTimeline {
-    private final String query;
+    private final Query query;
     private final Map<String, Day> days;
 
-    public SentimentTimeline() { this(""); } // For Jackson
+    public SentimentTimeline() { this(new Query()); } // For Jackson
 
-    public SentimentTimeline(String query) {
+    public SentimentTimeline(Query query) {
         this(query, new LinkedHashMap<>());
     }
 
-    public SentimentTimeline(String query, Map<String, Day> days) {
+    public SentimentTimeline(Query query, Map<String, Day> days) {
         this.query = query;
         this.days = days;
     }
@@ -57,7 +60,7 @@ public class SentimentTimeline {
     }
 
     @JsonProperty
-    public String getQuery() {
+    public Query getQuery() {
         return query;
     }
 
@@ -65,6 +68,12 @@ public class SentimentTimeline {
     public Map<String, Day> getDays() {
         return days;
     }
+
+    @JsonIgnore
+    public Instant getQuerySubmitTime() { return getQuery().getSubmitTime(); }
+
+    @JsonIgnore
+    public UUID getQueryId() { return getQuery().getId(); }
 
     @Override
     public String toString() {

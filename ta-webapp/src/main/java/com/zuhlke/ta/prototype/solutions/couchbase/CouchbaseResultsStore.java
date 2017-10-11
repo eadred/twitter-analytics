@@ -1,6 +1,5 @@
 package com.zuhlke.ta.prototype.solutions.couchbase;
 
-import com.couchbase.client.core.message.internal.ServicesHealth;
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonProcessingException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.ObjectMapper;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
@@ -8,18 +7,15 @@ import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import com.couchbase.client.java.view.ViewQuery;
 import com.couchbase.client.java.view.ViewResult;
 import com.couchbase.client.java.view.ViewRow;
-import com.google.common.collect.Streams;
 import com.zuhlke.ta.prototype.ResultsStore;
 import com.zuhlke.ta.prototype.SentimentTimeline;
 import com.couchbase.client.java.*;
 import com.couchbase.client.java.document.*;
 import com.couchbase.client.java.document.json.*;
-import com.couchbase.client.java.query.*;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,6 +46,7 @@ public class CouchbaseResultsStore implements ResultsStore {
         return rows.stream()
                 .map(row -> row.document().content().toString())
                 .flatMap(this::deserialize)
+                .sorted(Comparator.comparing(s -> s.getQuerySubmitTime()))
                 .collect(Collectors.toList());
     }
 
@@ -66,7 +63,7 @@ public class CouchbaseResultsStore implements ResultsStore {
     public void storeResults(SentimentTimeline result) {
         try {
             JsonObject jsonObj = JsonObject.fromJson(mapper.writeValueAsString(result));
-            JsonDocument doc = JsonDocument.create(UUID.randomUUID().toString(), jsonObj);
+            JsonDocument doc = JsonDocument.create(result.getQueryId().toString(), jsonObj);
             bucket.upsert(doc);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

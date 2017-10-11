@@ -8,8 +8,8 @@
 
         results:
         <#list results as result>
-            <h2>${result.query}</h2>
-            <div id="myDiv${result.query}" style="width: 900px; height: 300px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+            <h2>${result.query.keyword}</h2>
+            <div id="myDiv${result.query.id}" style="width: 900px; height: 300px;"><!-- Plotly chart will be drawn inside this DIV --></div>
             <script>
 
                 var days = [<#list result.days?keys as date>"${date}",</#list>];
@@ -31,7 +31,7 @@
                     }
                 ];
 
-                Plotly.newPlot('myDiv${result.query}', data, { barmode: 'stack'});
+                Plotly.newPlot('myDiv${result.query.id}', data, { barmode: 'stack'});
             </script>
         </#list>
         <#list pending as query>

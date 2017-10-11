@@ -12,7 +12,7 @@ import java.util.Map;
 public class SentimentTimelineTest {
     @Test
     public void roundTripSerialization() throws JsonProcessingException, IOException {
-        final String Query = "foo";
+        final Query Query = new Query("foo");
         final String Day1 = "2017-10-10";
         final String Day2 = "2017-10-11";
 
@@ -28,7 +28,9 @@ public class SentimentTimelineTest {
 
         SentimentTimeline deserialized = mapper.readValue(serialized, SentimentTimeline.class);
 
-        assertEquals(target.getQuery(), deserialized.getQuery());
+        assertEquals(target.getQuery().getKeyword(), deserialized.getQuery().getKeyword());
+        assertEquals(target.getQuerySubmitTime(), deserialized.getQuerySubmitTime());
+        assertEquals(target.getQueryId(), deserialized.getQueryId());
         assertEquals(target.getDays().size(), deserialized.getDays().size());
 
         assertDaysEqual(target.getDays().get(Day1), deserialized.getDays().get(Day1));

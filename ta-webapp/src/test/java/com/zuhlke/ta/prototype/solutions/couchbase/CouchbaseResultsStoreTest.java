@@ -1,6 +1,7 @@
 package com.zuhlke.ta.prototype.solutions.couchbase;
 
 import com.zuhlke.ta.SlowTests;
+import com.zuhlke.ta.prototype.Query;
 import com.zuhlke.ta.prototype.SentimentTimeline;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -31,7 +32,7 @@ public class CouchbaseResultsStoreTest {
     }
 
     private SentimentTimeline createTestResult() {
-        final String Query = "foo";
+        final Query Query = new Query("foo");
         final String Day1 = "2017-10-10";
         final String Day2 = "2017-10-11";
 

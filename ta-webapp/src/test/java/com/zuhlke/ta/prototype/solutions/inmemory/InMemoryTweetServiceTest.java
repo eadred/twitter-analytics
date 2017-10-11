@@ -40,7 +40,7 @@ public class InMemoryTweetServiceTest {
 
         final SentimentTimeline timeline = service.analyzeSentimentOverTime(new Query("Keyword"));
 
-        assertThat(timeline.getQuery(), equalTo("Keyword"));
+        assertThat(timeline.getQuery().getKeyword(), equalTo("Keyword"));
         assertThat(timeline.getDays(),
                     allOf(hasEntry(equalTo("2017-05-15"), hasToString("{goodTweets=2, badTweets=0}")),
                         hasEntry(equalTo("2017-06-16"), hasToString("{goodTweets=0, badTweets=2}"))));
