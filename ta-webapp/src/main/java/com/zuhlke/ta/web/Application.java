@@ -4,6 +4,7 @@ import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.common.base.Strings;
 import com.zuhlke.ta.prototype.*;
+import com.zuhlke.ta.prototype.solutions.couchbase.CouchbaseResultsStore;
 import com.zuhlke.ta.prototype.solutions.gc.*;
 import com.zuhlke.ta.prototype.solutions.inmemory.InMemoryResultsStore;
 import spark.ModelAndView;
@@ -23,9 +24,10 @@ public class Application {
         String projectId = args[0];
         String dataset = args[1];
         String sourceTable = args[2];
+
         BigQuery bigquery = BigQueryOptions.newBuilder().setProjectId(projectId).build().getService();
         TweetService tweetService = new GoogleCloudTweetsService(bigquery, dataset, sourceTable);
-        ResultsStore resultsStore = new InMemoryResultsStore();
+        ResultsStore resultsStore = getResultsStore(args);
         JobService jobService = new JobService(tweetService, resultsStore);
 
         FreeMarkerEngine freeMarker = new FreeMarkerEngine();
@@ -34,6 +36,12 @@ public class Application {
         get("/results/", (req, resp) -> jobService.getResults());
         get("/pending/", (req, resp) -> jobService.getPending());
         post("/jobs/", (req, resp) -> enqueueJob(jobService, req, resp));
+    }
+
+    private static ResultsStore getResultsStore(String[] args) {
+        if (args.length < 4) return new InMemoryResultsStore();
+
+        return new CouchbaseResultsStore(args[3]);
     }
 
     private static ModelAndView homepageData(JobService jobService) {

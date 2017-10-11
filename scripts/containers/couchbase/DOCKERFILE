@@ -1,5 +1,6 @@
 FROM couchbase:community-4.5.1
 
+COPY ./results.ddoc /results.ddoc
 COPY ./cluster-init.sh /cluster-init.sh
 RUN chmod a+x /cluster-init.sh
 

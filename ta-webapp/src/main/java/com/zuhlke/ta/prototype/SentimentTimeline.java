@@ -1,5 +1,7 @@
 package com.zuhlke.ta.prototype;
 
+import com.couchbase.client.deps.com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,6 +11,8 @@ import static java.util.stream.Collectors.joining;
 public class SentimentTimeline {
     private final String query;
     private final Map<String, Day> days;
+
+    public SentimentTimeline() { this(""); } // For Jackson
 
     public SentimentTimeline(String query) {
         this(query, new LinkedHashMap<>());
@@ -20,7 +24,8 @@ public class SentimentTimeline {
     }
 
     public static class Day {
-        private int goodTweets = 0, badTweets = 0;
+        private int goodTweets = 0;
+        private int badTweets = 0;
 
         public Day() {
             this(0, 0);
@@ -35,8 +40,10 @@ public class SentimentTimeline {
             return new Day(left.goodTweets + right.goodTweets, left.badTweets + right.badTweets);
         }
 
+        @JsonProperty
         public int getGoodTweets() { return goodTweets; }
 
+        @JsonProperty
         public int getBadTweets() { return badTweets; }
 
         public void incrementGood() { goodTweets++; }
@@ -49,10 +56,12 @@ public class SentimentTimeline {
         }
     }
 
+    @JsonProperty
     public String getQuery() {
         return query;
     }
 
+    @JsonProperty
     public Map<String, Day> getDays() {
         return days;
     }

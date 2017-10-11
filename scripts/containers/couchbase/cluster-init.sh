@@ -32,11 +32,19 @@ couchbase-cli cluster-init -c 0.0.0.0:8091 \
       --cluster-ramsize=$MEMORY_QUOTA \
       --wait
 
+echo "# Creating bucket"
 couchbase-cli bucket-create -c 0.0.0.0:8091 \
      --bucket=results \
      --bucket-ramsize=$MEMORY_QUOTA \
      --wait \
      -u $USERNAME -p $PASSWORD
+
+echo "# Creating view"
+curl -X PUT \
+      -u $USERNAME:$PASSWORD \
+      -H 'Content-Type: application/json' \
+      http://localhost:8092/results/_design/results \
+      -d @results.ddoc
 
 echo "# Attaching to couchbase-server entrypoint"
 fg 1
