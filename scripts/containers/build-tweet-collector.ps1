@@ -1,1 +1,0 @@
-docker build -t tweet-collector ..\..\ta-tweet-collector
