@@ -1,0 +1,21 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: couchbase-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: couchbase
+    spec:
+      containers:
+      - name: ta-couchbase
+        image: eu.gcr.io/analytics-174711/ta-couchbase
+        ports:
+        - containerPort: 8091
+        - containerPort: 8092
+        - containerPort: 8093
+        - containerPort: 8094
+        - containerPort: 11210
+        - containerPort: 11211

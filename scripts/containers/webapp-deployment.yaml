@@ -1,0 +1,16 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: ta-webapp
+        image: eu.gcr.io/analytics-174711/ta-webapp
+        ports:
+        - containerPort: 4567
