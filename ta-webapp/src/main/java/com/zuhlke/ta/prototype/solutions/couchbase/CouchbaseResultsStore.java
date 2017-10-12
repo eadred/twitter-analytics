@@ -4,6 +4,7 @@ import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonProcessingExcept
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.ObjectMapper;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
+import com.couchbase.client.java.error.DocumentDoesNotExistException;
 import com.couchbase.client.java.view.ViewQuery;
 import com.couchbase.client.java.view.ViewResult;
 import com.couchbase.client.java.view.ViewRow;
@@ -14,6 +15,7 @@ import com.couchbase.client.java.*;
 import com.couchbase.client.java.document.*;
 import com.couchbase.client.java.document.json.*;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -55,17 +57,23 @@ public class CouchbaseResultsStore implements ResultsStore {
                 st -> st);
     }
 
-    public <R> List<R> getResults(Predicate<SentimentTimeline> filter, Function<SentimentTimeline, R> resultMap) {
-        ViewResult result = bucket.query(ViewQuery.from(DesignName, ViewName));
-
-        List<ViewRow> rows = result.allRows();
+    private <R> List<R> getResults(Predicate<SentimentTimeline> filter, Function<SentimentTimeline, R> resultMap) {
+        List<ViewRow> rows = getAllRows();
         return rows.stream()
-                .map(row -> row.document().content().toString())
+                .flatMap(row -> {
+                    JsonDocument doc = row.document();
+                    return doc == null ? Stream.empty() : Stream.of(doc.content().toString());
+                })
                 .flatMap(this::deserialize)
                 .filter(filter)
                 .sorted(Comparator.comparing(s -> s.getQuerySubmitTime()))
                 .map(resultMap)
                 .collect(Collectors.toList());
+    }
+
+    private List<ViewRow> getAllRows() {
+        ViewResult result = bucket.query(ViewQuery.from(DesignName, ViewName));
+        return result.allRows();
     }
 
     private Stream<SentimentTimeline> deserialize(String json) {
@@ -91,5 +99,25 @@ public class CouchbaseResultsStore implements ResultsStore {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void close() {
+        bucket.close();
+        cluster.disconnect();
+    }
+
+    public void clear() {
+        List<ViewRow> rows = getAllRows();
+
+        rows.stream()
+            .map(vr -> vr.id())
+            .forEach(id -> {
+                try {
+                    bucket.remove(id);
+                } catch (DocumentDoesNotExistException e) {
+                    e.printStackTrace();
+                }
+            });
     }
 }

@@ -2,9 +2,10 @@ package com.zuhlke.ta.prototype;
 
 import edu.stanford.nlp.pipeline.CoreNLPProtos;
 
+import java.io.Closeable;
 import java.util.List;;
 
-public interface ResultsStore {
+public interface ResultsStore extends Closeable {
     List<Query> getPendingResults();
 
     List<SentimentTimeline> getResults();

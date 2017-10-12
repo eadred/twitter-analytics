@@ -30,4 +30,9 @@ public class InMemoryResultsStore implements ResultsStore {
         results.add(result);
         pendingResults.removeIf(q -> q.getId() == result.getQueryId());
     }
+
+    @Override
+    public void close() {
+        // Don't need to do anything...
+    }
 }
