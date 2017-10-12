@@ -8,5 +8,5 @@ $dataset="camp_exercise"
 $topic="tweets"
 $spark_cluster="spark-sentiment"
 $container_cluster="twitter-analytics"
-$jarloc="gs://eadred-dataflow/spark"
+$jarloc="gs://twitter-analytics/spark"
 $windowsizesecs=60
