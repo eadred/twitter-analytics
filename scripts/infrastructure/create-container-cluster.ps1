@@ -1,7 +1,9 @@
+. ./set-vars.ps1
+
 gcloud beta container `
---project "analytics-174711" `
-clusters create "twitter-analytics" `
---zone "europe-west1-b" `
+--project $project `
+clusters create $container_cluster `
+--zone $zone `
 --username="admin" `
 --cluster-version "1.7.6-gke.1" `
 --machine-type "n1-standard-1" `

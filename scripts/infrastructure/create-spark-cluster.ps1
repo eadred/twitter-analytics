@@ -1,6 +1,6 @@
 . ./set-vars.ps1
 
-gcloud beta dataproc clusters create $cluster `
+gcloud beta dataproc clusters create $spark_cluster `
 --region $region `
 --subnet default `
 --single-node `
