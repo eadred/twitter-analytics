@@ -30,8 +30,8 @@ public class CouchbaseResultsStore implements ResultsStore {
 
     public CouchbaseResultsStore(String server) {
         CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder()
-                .connectTimeout(10000)
-                .kvTimeout(10000)
+                .connectTimeout(60000)
+                .kvTimeout(60000)
                 .build();
 
         cluster = CouchbaseCluster.create(env, server);

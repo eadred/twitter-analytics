@@ -21,3 +21,4 @@ kubectl create -f webapp-deployment.yaml
 # kubectl delete deployment webapp-deployment
 # kubectl delete deployment couchbase-deployment
 # kubectl delete service webapp-service
+# kubectl delete service couchbase-service
