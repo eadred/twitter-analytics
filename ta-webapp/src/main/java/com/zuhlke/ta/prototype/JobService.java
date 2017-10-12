@@ -18,6 +18,7 @@ public final class JobService extends Thread {
 
     public void enqueueQuery(Query q) {
         try {
+            resultsStore.storePendingResults(q);
             pendingQueries.put(q);
         } catch (InterruptedException e) {
             // this is ok
@@ -43,6 +44,6 @@ public final class JobService extends Thread {
     }
 
     public List<Query> getPending() {
-        return new ArrayList<>(pendingQueries);
+        return resultsStore.getPendingResults();
     }
 }

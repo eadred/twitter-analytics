@@ -1,6 +1,7 @@
 package com.zuhlke.ta.prototype.solutions.common;
 
 import com.zuhlke.ta.prototype.*;
+import com.zuhlke.ta.prototype.SentimentTimeline;
 import com.zuhlke.ta.prototype.SentimentTimeline.Day;
 import com.zuhlke.ta.prototype.solutions.gc.TweetsImporter;
 
@@ -41,7 +42,7 @@ public class PersistentTweetService implements TweetService, TweetsImporter {
 
         tracer.summarise();
 
-        return new SentimentTimeline(q, days);
+        return SentimentTimeline.completed(q, days);
     }
 
     private Collector<Tweet, Day, Day> toSentiment() {

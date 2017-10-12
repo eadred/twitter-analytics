@@ -14,16 +14,26 @@ import static java.util.stream.Collectors.joining;
 public class SentimentTimeline {
     private final Query query;
     private final Map<String, Day> days;
+    private final Status status;
 
-    public SentimentTimeline() { this(new Query()); } // For Jackson
+    public SentimentTimeline() { this(new Query(), new LinkedHashMap<>(), Status.Pending); } // For Jackson
 
-    public SentimentTimeline(Query query) {
-        this(query, new LinkedHashMap<>());
+    public static SentimentTimeline pending(Query query) {
+        return new SentimentTimeline(query, new LinkedHashMap<>(), Status.Pending);
     }
 
-    public SentimentTimeline(Query query, Map<String, Day> days) {
+    public static SentimentTimeline failed(Query query) {
+        return new SentimentTimeline(query, new LinkedHashMap<>(), Status.Failed);
+    }
+
+    public static SentimentTimeline completed(Query query, Map<String, Day> days) {
+        return new SentimentTimeline(query, days, Status.Completed);
+    }
+
+    private SentimentTimeline(Query query, Map<String, Day> days, Status status) {
         this.query = query;
         this.days = days;
+        this.status = status;
     }
 
     public static class Day {
@@ -69,6 +79,9 @@ public class SentimentTimeline {
         return days;
     }
 
+    @JsonProperty
+    public Status getStatus() { return status; }
+
     @JsonIgnore
     public Instant getQuerySubmitTime() { return getQuery().getSubmitTime(); }
 
@@ -83,4 +96,9 @@ public class SentimentTimeline {
                         .collect(joining("\n"));
     }
 
+    public enum Status {
+        Pending,
+        Failed,
+        Completed
+    }
 }

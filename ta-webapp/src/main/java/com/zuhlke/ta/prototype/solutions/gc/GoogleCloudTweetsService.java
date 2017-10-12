@@ -34,7 +34,7 @@ public class GoogleCloudTweetsService implements TweetService {
             return getResults(q);
         } catch (Exception e) {
             System.out.println(e.toString());
-            return new SentimentTimeline(q);
+            return SentimentTimeline.failed(q);
         }
     }
 
@@ -47,7 +47,7 @@ public class GoogleCloudTweetsService implements TweetService {
 
         Map<String, SentimentTimeline.Day> merged = mergeResults(positiveResults, negativeResults);
 
-        return new SentimentTimeline(q, merged);
+        return SentimentTimeline.completed(q, merged);
     }
 
     private QueryResponse runQuery(Query q, SentimentType type) {

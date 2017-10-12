@@ -7,6 +7,7 @@ import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import com.couchbase.client.java.view.ViewQuery;
 import com.couchbase.client.java.view.ViewResult;
 import com.couchbase.client.java.view.ViewRow;
+import com.zuhlke.ta.prototype.Query;
 import com.zuhlke.ta.prototype.ResultsStore;
 import com.zuhlke.ta.prototype.SentimentTimeline;
 import com.couchbase.client.java.*;
@@ -16,6 +17,8 @@ import com.couchbase.client.java.document.json.*;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,14 +42,29 @@ public class CouchbaseResultsStore implements ResultsStore {
     }
 
     @Override
+    public List<Query> getPendingResults() {
+        return getResults(
+                st -> st.getStatus() == SentimentTimeline.Status.Pending,
+                SentimentTimeline::getQuery);
+    }
+
+    @Override
     public List<SentimentTimeline> getResults() {
+        return getResults(
+                st -> st.getStatus() != SentimentTimeline.Status.Pending,
+                st -> st);
+    }
+
+    public <R> List<R> getResults(Predicate<SentimentTimeline> filter, Function<SentimentTimeline, R> resultMap) {
         ViewResult result = bucket.query(ViewQuery.from(DesignName, ViewName));
 
         List<ViewRow> rows = result.allRows();
         return rows.stream()
                 .map(row -> row.document().content().toString())
                 .flatMap(this::deserialize)
+                .filter(filter)
                 .sorted(Comparator.comparing(s -> s.getQuerySubmitTime()))
+                .map(resultMap)
                 .collect(Collectors.toList());
     }
 
@@ -57,6 +75,11 @@ public class CouchbaseResultsStore implements ResultsStore {
             e.printStackTrace();
             return Stream.empty();
         }
+    }
+
+    @Override
+    public void storePendingResults(Query query) {
+        storeResults(SentimentTimeline.pending(query));
     }
 
     @Override

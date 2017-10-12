@@ -40,6 +40,6 @@ public class CouchbaseResultsStoreTest {
         days.put(Day1, new SentimentTimeline.Day(5, 2));
         days.put(Day2, new SentimentTimeline.Day(3, 4));
 
-        return new SentimentTimeline(Query, days);
+        return SentimentTimeline.completed(Query, days);
     }
 }

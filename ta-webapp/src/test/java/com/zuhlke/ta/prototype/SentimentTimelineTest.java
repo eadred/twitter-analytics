@@ -20,7 +20,7 @@ public class SentimentTimelineTest {
         days.put(Day1, new SentimentTimeline.Day(5, 2));
         days.put(Day2, new SentimentTimeline.Day(3, 4));
 
-        SentimentTimeline target = new SentimentTimeline(Query, days);
+        SentimentTimeline target = SentimentTimeline.completed(Query, days);
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -32,6 +32,7 @@ public class SentimentTimelineTest {
         assertEquals(target.getQuerySubmitTime(), deserialized.getQuerySubmitTime());
         assertEquals(target.getQueryId(), deserialized.getQueryId());
         assertEquals(target.getDays().size(), deserialized.getDays().size());
+        assertEquals(target.getStatus(), deserialized.getStatus());
 
         assertDaysEqual(target.getDays().get(Day1), deserialized.getDays().get(Day1));
         assertDaysEqual(target.getDays().get(Day2), deserialized.getDays().get(Day2));
