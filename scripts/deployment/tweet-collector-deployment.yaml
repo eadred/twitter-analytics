@@ -1,0 +1,14 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: tweet-collector-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tweet-collector
+    spec:
+      containers:
+      - name: tweet-collector
+        image: eu.gcr.io/analytics-174711/tweet-collector

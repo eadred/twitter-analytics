@@ -5,9 +5,6 @@ kubectl create -f webapp-service.yaml
 kubectl create -f couchbase-deployment.yaml
 kubectl create -f webapp-deployment.yaml
 
-
-# kubectl expose deployment webapp-deployment --port=80 --target-port=4567 --type="LoadBalancer"
-
 # Get details
 # kubectl get deployment webapp-deployment
 # kubectl get pods -l app=webapp
