@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: couchbase-admin-service
+spec:
+  ports:
+  - port: 8091
+    name: "web-admin"
+    protocol: TCP
+  selector:
+    app: couchbase
+  type: "LoadBalancer"
